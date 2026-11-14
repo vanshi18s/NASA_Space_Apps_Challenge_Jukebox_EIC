@@ -1,0 +1,66 @@
+{
+  "id": "nightlights",
+  "title": "Night Lights 2012-2023 (NASA Black Marble, VIIRS)",
+  "source": {
+    "svs_page": "https://svs.gsfc.nasa.gov/5313/",
+    "credit": "NASA's Scientific Visualization Studio",
+    "note": "Frames come from NASA's visualization (display-stretched), not calibrated radiance."
+  },
+
+  "frames": {
+    "folder": "data/nightlights/keyframes/",
+    "years": {
+      "2012": "year_2012.jpg", "2013": "year_2013.jpg", "2014": "year_2014.jpg",
+      "2015": "year_2015.jpg", "2016": "year_2016.jpg", "2017": "year_2017.jpg",
+      "2018": "year_2018.jpg", "2019": "year_2019.jpg", "2020": "year_2020.jpg",
+      "2021": "year_2021.jpg", "2022": "year_2022.jpg", "2023": "year_2023.jpg"
+    },
+    "change_map": "change_map.jpg",
+    "frame_size_px": [2048, 576],
+    "source_video_frame_numbers_at_10fps": {
+      "2012": 3, "2013": 7, "2014": 16, "2015": 22, "2016": 27, "2017": 33,
+      "2018": 37, "2019": 46, "2020": 52, "2021": 56, "2022": 63, "2023": 86
+    }
+  },
+
+  "map_panel": {
+    "comment": "The 32:9 frame holds the same world map twice side by side. Analyse ONE copy: the left one.",
+    "x0": 0,
+    "x1": 1024,
+    "y0": 0,
+    "y1": 576
+  },
+
+  "geo": {
+    "comment": "Linear (equirectangular) mapping inside the panel. Checked by eye against 12 city locations; expect roughly +/-3 degrees. Re-check on the validation page.",
+    "lon_at_left_edge_deg": -171.8,
+    "lon_span_deg": 360,
+    "lat_at_top_deg": 90,
+    "lat_at_bottom_deg": -90
+  },
+
+  "masks_px_in_2048x576_frame": {
+    "comment": "Set to 'no light' (black) before analysis. The year label lies in the RIGHT copy and is outside the left panel, but is masked too for safety.",
+    "year_label":      { "x0": 1050, "y0": 280, "x1": 1120, "y1": 310 },
+    "colorbar_block":  { "x0": 995,  "y0": 308, "x1": 1175, "y1": 348 },
+    "measured": {
+      "year_label_bbox": { "x0": 1062, "y0": 288, "x1": 1106, "y1": 302 },
+      "colorbar_text_and_bar_bbox": { "x0": 1004, "y0": 315, "x1": 1165, "y1": 341 },
+      "colorbar_gradient_only": { "x0": 1004, "y0": 323, "x1": 1164, "y1": 332 }
+    },
+    "change_map_mask_value": "white (= no change)"
+  },
+
+  "legend_read_from_change_map": {
+    "title_text": "Change in Lighting Intensity from 2012 to 2023",
+    "left_end": "orange = lights out (less light)",
+    "middle": "white = no change",
+    "right_end": "purple = new lights (more light)",
+    "limit": "Legend is qualitative (no numeric units), so describe results as direction and relative size, not as radiance values."
+  },
+
+  "layout_check": {
+    "left_vs_right_copy_best_shift_px": 1024,
+    "comment": "Mean absolute difference between the two copies is below 1 grey level at a shift of 1024-1025 px."
+  }
+}

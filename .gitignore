@@ -1,0 +1,6 @@
+raw/
+data/nightlights/series_*.jpg
+data/contact_sheet_*.jpg
+data/verify_labels.jpg
+__pycache__/
+*.pyc
