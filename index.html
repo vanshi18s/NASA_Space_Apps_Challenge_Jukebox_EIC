@@ -29,8 +29,11 @@ h1{font:700 clamp(1.7rem,4.5vw,2.8rem)/1.1 Unbounded,"Atkinson Hyperlegible",san
 @media(max-width:860px){.layout{grid-template-columns:1fr}}
 .map{position:relative;background:#000;border:1px solid var(--line);border-radius:8px;overflow:hidden;max-width:640px}
 canvas{display:block;width:100%;height:auto}
+.map.two{max-width:520px}
+#fx{position:absolute;left:0;top:0;pointer-events:none}
+#cap2{position:absolute;left:12px;top:calc(50% + 8px);font:700 1rem Unbounded,sans-serif;text-shadow:0 2px 8px #000;display:none}
 #head{position:absolute;top:0;bottom:0;width:3px;background:var(--gold);box-shadow:0 0 12px var(--gold);display:none}
-#cap{position:absolute;left:12px;top:8px;font:700 1.4rem Unbounded,sans-serif;text-shadow:0 2px 8px #000}
+#cap{position:absolute;left:12px;top:8px;font:700 1rem Unbounded,sans-serif;text-shadow:0 2px 8px #000}
 #key{position:absolute;right:10px;bottom:8px;display:none;align-items:center;gap:8px;font-size:.8rem;text-shadow:0 1px 4px #000}
 #key i{display:block;width:110px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--less),#fff,var(--more))}
 .how{margin-top:16px;max-width:640px}
@@ -66,17 +69,17 @@ a{color:var(--gold)}
 
 <div class="layout">
   <div>
-    <div class="map" role="img" aria-label="Flat world map from NASA. A gold line sweeps left to right while the sound plays.">
-      <canvas id="cv" width="1024" height="576"></canvas><div id="head"></div><div id="cap"></div>
-      <div id="key"><span>less light</span><i></i><span>more light</span></div>
+    <div class="map" id="map" role="img" aria-label="Flat world map from NASA. A gold line sweeps left to right while the sound plays.">
+      <canvas id="cv" width="1024" height="576"></canvas><canvas id="fx" width="1024" height="576"></canvas><div id="head"></div><div id="cap"></div><div id="cap2"></div>
     </div>
     <section class="how" aria-labelledby="mt">
       <h2 id="mt">How the sound is made</h2>
       <dl>
         <dt>Latitude → pitch</dt><dd>12 bands from 70°N to 50°S in an A minor pentatonic scale. North is high, south is low.</dd>
-        <dt>Light → loudness</dt><dd>Brighter lights are louder, on one fixed scale for every year. Gray land is ignored.</dd>
+        <dt>Light → loudness</dt><dd>Denser, brighter lights are louder, on one fixed scale for every year. Gray land is ignored. On the map, the glow beside the gold bar shows the loudness of each latitude band.</dd>
+        <dt>Bright hubs</dt><dd>The brightest clusters ring like a bell when the scan reaches them and stay marked on the map. A brighter hub rings louder, and its pitch follows latitude.</dd>
         <dt>Longitude → time and stereo</dt><dd>The scan moves west to east and the sound moves from the left ear to the right.</dd>
-        <dt>Change map</dt><dd>Purple (more light since 2012) glides up. Orange (less light) glides down. White (no change) is silent.</dd>
+        <dt>Compare mode</dt><dd>Shows 2012 above 2023 and scans 2012 first, then 2023. One soft blip marks 2012 and two blips mark 2023.</dd>
         <dt>Year label</dt><dd>The year printed in NASA’s video is never analysed. It sits outside the map area we read, and that spot is also masked.</dd>
       </dl>
     </section>
@@ -111,20 +114,24 @@ a{color:var(--gold)}
 <script src="js/sonify.js"></script>
 <script>
 "use strict";
-const SN=Sonify,$=id=>document.getElementById(id),cv=$("cv"),c2=cv.getContext("2d"),head=$("head");
-const SPEEDS=[0.5,1,1.5,2],INTENS=[0.45,0.75,1],INAMES=["Soft","Medium","Full"];
+const SN=Sonify,$=id=>document.getElementById(id),cv=$("cv"),c2=cv.getContext("2d"),head=$("head"),fx=$("fx").getContext("2d");
+const SPEEDS=[0.5,1,1.5,2],INTENS=[0.6,0.85,1],INAMES=["Soft","Medium","Full"];
 const imgs={},data={};let ds=0,playing=false,info=null,shown="",ready=false,raf=0;
 
 function say(m){const s=$("status");s.textContent="";setTimeout(()=>s.textContent=m,30)}
 SN.DATASETS.forEach((d,i)=>{const o=document.createElement("option");o.value=i;o.textContent=d.name+(d.ready?"":" (frames not added yet)");$("ds").appendChild(o)});
 function fillModes(){const m=$("mode");m.innerHTML="";(SN.DATASETS[ds].modes||["Not available yet"]).forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t;m.appendChild(o)})}
 const keys=()=>{const m=+$("mode").value;return m===0?["y"+SN.YEARS[+$("year").value]]:m===1?["y2012","y2023"]:["chg"]};
+const vk=()=>+$("mode").value===1?"cmp":keys()[0];
 function labels(){$("yo").textContent=SN.YEARS[+$("year").value];$("so").textContent=SPEEDS[+$("speed").value]+"×";$("io").textContent=INAMES[+$("inten").value];
   $("year").disabled=+$("mode").value!==0||!SN.DATASETS[ds].ready;$("year").setAttribute("aria-valuetext",String(SN.YEARS[+$("year").value]))}
+const hc=k=>data[k]?" · "+data[k].hubs.length+" bright hubs":"";
 function show(k){
-  if(!imgs[k]||shown===k)return;shown=k;const im=imgs[k],f=im.naturalWidth/2048;
-  c2.drawImage(im,0,0,1024*f,im.naturalHeight,0,0,1024,576);
-  $("cap").textContent=k==="chg"?"Change 2012 → 2023":k.slice(1);$("key").style.display=k==="chg"?"flex":"none";
+  const two=k==="cmp";if(shown===k||(two?!(imgs.y2012&&imgs.y2023):!imgs[k]))return;shown=k;
+  cv.height=$("fx").height=two?1152:576;$("map").classList.toggle("two",two);
+  const draw=(im,y)=>{const f=im.naturalWidth/2048;c2.drawImage(im,0,0,1024*f,im.naturalHeight,0,y,1024,576)};
+  if(two){draw(imgs.y2012,0);draw(imgs.y2023,576)}else draw(imgs[k],0);
+  $("cap").textContent=(two?"2012":k.slice(1))+hc(two?"y2012":k);$("cap2").textContent="2023"+hc("y2023");$("cap2").style.display=two?"block":"none";
 }
 const load=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(src);i.src=src});
 async function boot(){
@@ -132,9 +139,9 @@ async function boot(){
   if(!d.ready){$("play").textContent="Data not added yet";say(d.name+": frames and sonification rules are coming soon.");return}
   $("play").textContent="Loading data…";
   try{
-    const list=d.years.map(y=>["y"+y,"year_"+y+".jpg",false]).concat([["chg","change_map.jpg",true]]);
+    const list=d.years.map(y=>["y"+y,"year_"+y+".jpg",false]);
     for(const [k,f,c] of list){if(!imgs[k]){imgs[k]=await load(d.folder+f);data[k]=SN.analyze(imgs[k],c)}}
-    ready=true;$("play").disabled=false;$("play").textContent="Play";show(keys()[0]);say("Ready. Press Space to play.");
+    ready=true;$("play").disabled=false;$("play").textContent="Play";show(vk());say("Ready. Press Space to play.");
   }catch(e){$("play").textContent="Could not load data";say("Could not load "+e+". Open this page with Live Server from the repository root.")}
 }
 function play(){
@@ -144,15 +151,25 @@ function play(){
 function vis(){
   if(!playing)return;const i=Math.max(0,Math.floor(SN.clock()/info.dt));
   if(i>=info.total){stop();say("Finished");return}
-  head.style.left=(Math.min(i%info.L,info.steps)/info.steps*100)+"%";show(keys()[Math.floor(i/info.L)]);raf=requestAnimationFrame(vis);
+  const cmp=+$("mode").value===1,seg=Math.floor(i/info.L),s=Math.min(i%info.L,info.steps),k=keys()[seg];
+  head.style.left=(s/info.steps*100)+"%";head.style.top=cmp?seg*50+"%":"0";head.style.bottom=cmp?(1-seg)*50+"%":"0";
+  show(cmp?"cmp":k);draw(data[k],s,cmp?seg*576:0);raf=requestAnimationFrame(vis);
 }
-function stop(quiet){const was=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();if(ready)$("play").textContent="Play";if(was&&!quiet)say("Stopped")}
+function draw(d,s,oy){ /* highlights on the picture: band glow at the scan bar, rings on bright hubs */
+  const G=SN.GEO;fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);const x=s*G.COLW+G.COLW/2;
+  for(let b=0;b<G.BANDS;b++){const a=d[(Math.min(s,G.STEPS-1)*G.BANDS+b)*2];if(!(a>0)||s>=G.STEPS)continue;
+    fx.fillStyle="rgba(242,193,78,"+(.15+.6*a)+")";const w=6+70*a;fx.fillRect(x-w,oy+G.BAND_TOP+b*G.BAND_H+4,2*w,G.BAND_H-8)}
+  for(const h of d.hubs){if(h.s>s)continue;const age=(s-h.s)*info.dt,hx=h.s*G.COLW+G.COLW/2,hy=oy+h.y;
+    if(age<1){fx.strokeStyle="rgba(255,236,170,"+(1-age)+")";fx.lineWidth=2;fx.beginPath();fx.arc(hx,hy,8+30*age,0,6.283);fx.stroke()}
+    fx.fillStyle="rgba(255,236,170,.6)";fx.beginPath();fx.arc(hx,hy,2.5,0,6.283);fx.fill()}
+}
+function stop(quiet){fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);const was=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();if(ready)$("play").textContent="Play";if(was&&!quiet)say("Stopped")}
 const toggle=()=>playing?stop():play();
 const home=()=>{stop(true);SN.ensure(INTENS[+$("inten").value]);SN.chime();$("ds").focus();say("Home. Choose a dataset.")};
 const setting=()=>say("Dataset "+SN.DATASETS[ds].name+", mode "+$("mode").selectedOptions[0].text+", year "+SN.YEARS[+$("year").value]+", speed "+SPEEDS[+$("speed").value]+"×, intensity "+INAMES[+$("inten").value]+(playing?", playing.":", stopped."));
 
 $("ds").onchange=()=>{stop(true);ds=+$("ds").value;fillModes();labels();shown="";boot()};
-$("mode").onchange=()=>{stop(true);shown="";labels();SN.ensure(INTENS[+$("inten").value]);SN.tick(+$("mode").value,3);if(ready)show(keys()[0]);say("Mode: "+$("mode").selectedOptions[0].text)};
+$("mode").onchange=()=>{stop(true);shown="";labels();SN.ensure(INTENS[+$("inten").value]);SN.tick(+$("mode").value,3);if(ready)show(vk());say("Mode: "+$("mode").selectedOptions[0].text)};
 [["year",12],["speed",4],["inten",3]].forEach(([id,n])=>{
   const el=$(id);
   el.addEventListener("input",()=>{SN.ensure(INTENS[+$("inten").value]);labels();SN.tick(+el.value,n);
