@@ -6,8 +6,8 @@ Frequency_Vista turns NASA Earth Information Center visualizations into live, pl
 
 Built by **Team Phoenix Flames** for the **2026 NASA International Space Apps Challenge**, challenge "The Earth Information Jukebox".
 
-**Live demo:** https://YOUR-USERNAME.github.io/YOUR-REPO/
-**Source code:** https://github.com/YOUR-USERNAME/YOUR-REPO
+**Live demo:** https://vanshi18s.github.io/NASA_Space_Apps_Challenge_Jukebox_EIC/
+**Source code:** https://github.com/vanshi18s/NASA_Space_Apps_Challenge_Jukebox_EIC
 **2-minute demo video:** _add link_
 
 <!-- Add a screenshot: docs/screenshot.png -->
@@ -18,7 +18,7 @@ Most NASA Earth data is published as images and video. A blind person can't see 
 
 ## What it does
 
-- **Two NASA datasets, one jukebox.** Choose a data story, a date, and press play.
+- **Two NASA datasets, one jukebox.** Choose a data story, a date and press play.
 - **Live sound.** The sound is generated in real time in your browser with the Web Audio API. There are no recordings and no audio files.
 - **Fixed, comparable scales.** The same value always sounds the same, so 2012 and 2023 can be heard against each other.
 - **Compare mode.** Hear the first date, then a later date, with short cue tones so you always know which one is playing.
@@ -43,7 +43,7 @@ A scan covers **70°N to 50°S** in **12 latitude bands** (10° each) and **256 
 | Bright hubs (local maxima over about 10° of longitude by 30° of latitude, above a fixed threshold) | Bell tones |
 | Darker overall frame | Slightly darker tone (low-pass filter), so a dim year sounds subtly softer |
 
-### Sea Surface Temperature ([SVS 3912](https://svs.gsfc.nasa.gov/3912/))
+### Global Sea Surface Currents and Temperature ([SVS 3912](https://svs.gsfc.nasa.gov/3912/))
 
 | Data | Sound |
 |---|---|
@@ -109,9 +109,16 @@ The live demo on GitHub Pages is served over HTTPS, which browsers also require 
 
 ## Why rules and not machine learning
 
-The mapping is deterministic and published, so the same data always gives the same sound, and every sound can be traced to a formula. No machine learning is used. All analysis is plain pixel analysis in the browser, and the colour-to-temperature table is built offline from NASA's colour bar.
+A sonification is only useful if listeners can trust it. A blind user can’t glance at the map to double-check what they hear, so the sound has to be an honest translation of the data and nothing else. That is why every sound in Frequency_Vista comes from a written rule, not from a trained model.
 
-## Accuracy: what we checked, and the limits
+-Traceable. Any note can be traced back to the pixels that caused it. Latitude sets the pitch, light or temperature sets the loudness, and longitude sets the time and stereo position. A learned model can’t explain itself like that.
+-Reproducible. The same frame gives the same notes, loudness and stereo positions every time, on every device. (Only the texture of the reverb tail is random.)
+-Comparable. Fixed scales put 2012 and 2023 on the same ruler. A model that adapts to each image would quietly change what “loud” means from one year to the next.
+-Nothing invented. A model can produce patterns that sound convincing but are not in the data. Rules can only play what is there.
+
+No machine learning runs anywhere in the project. The analysis is plain pixel arithmetic in the browser (brightness, colour hue and local peaks), and the colour-to-temperature table is built offline from NASA’s own colour bar. If a future dataset needs to separate categories, such as dust from smoke, we would use simple, documented methods like thresholding or k-means colour clustering, so the result stays explainable.
+
+## Accuracy: what we checked and the limits
 
 - **Fixed scales, never auto-normalized**, so different years and dates are heard on the same scale.
 - **The year label printed in NASA's night-lights video is never analysed.** The frame holds the world map twice side by side. We analyse only the left copy, and the small colour-bar sliver that crosses into it is masked.
@@ -122,8 +129,8 @@ The mapping is deterministic and published, so the same data always gives the sa
 - **Smoothing:** a 3-step moving average (1-2-1 weights), about 4° of longitude, makes the sound glide.
 
 **Limits.**
-- The frames are NASA's display-stretched visualizations, not calibrated measurements. The sound shows patterns and relative differences, not exact values.
-- Sea-surface temperatures are read from colours, so they are approximate. The visible current-flow lines are not sonified.
+- The frames are NASA's display-stretched visualizations and the sound shows patterns and relative differences.
+- Sea-surface temperatures are read from colours, so they are approximate.
 - Year-to-year change in the night lights is small. The 2012 versus 2023 comparison is where the difference is clearest.
 - The musical scale, the tones and the bell sound are artistic choices. What is loud, high, bright or ringing comes from the data.
 
@@ -170,12 +177,16 @@ Data preparation: download the SVS video, run `extract_series.py`, then `contact
 
 ## Use of AI
 
-Code (including the keyboard and audio navigation system), documentation and submission text were written with assistance from **Claude (Anthropic)**, then run, measured and checked by the team against NASA's frames. All sound is synthesized live in the browser with the Web Audio API. No audio recordings, samples or AI-generated audio files are used. Self-voicing uses the browser's built-in speech synthesis. No images or videos were AI-generated.
+Documentation and research were done with assistance from **Claude (Anthropic)**. All sound is synthesized live in the browser with the Web Audio API. No audio recordings, samples or AI-generated audio files are used. Self-voicing uses the browser's built-in speech synthesis. No images or videos were AI-generated.
 
 ## Disclaimer
 
-Frequency_Vista is an independent project made for the NASA International Space Apps Challenge. NASA does not endorse this project or any non-U.S. Government entity and is not responsible for the content of non-U.S. Government websites. Do not use it for scientific analysis or safety decisions.
+Frequency_Vista is an independent project made for the NASA International Space Apps Challenge 2026 by Team Phoenix Flames.
 
 ## License
 
 See [LICENSE](LICENSE).
+
+# Team Members
+-Vanshi Sethi
+-Vaibhav Sethi
