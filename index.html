@@ -58,6 +58,8 @@ kbd{background:#1a2340;border:1px solid var(--line);border-radius:4px;padding:0 
 .disc{margin-top:28px;border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:rgba(10,15,30,.7);color:var(--mute);font-size:.88rem;max-width:100ch}
 .disc h2{color:var(--text)}.disc p{margin:6px 0}
 a{color:var(--gold)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.82rem}caption{text-align:left;font-weight:700;margin-bottom:6px}
+th,td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}th{background:#141c38}
 </style>
 </head>
 <body>
@@ -79,9 +81,43 @@ a{color:var(--gold)}
         <dt>Light → loudness</dt><dd>Denser, brighter lights are louder, on one fixed scale for every year. Gray land is ignored. On the map, the glow beside the gold bar shows the loudness of each latitude band.</dd>
         <dt>Bright hubs</dt><dd>The brightest clusters ring like a bell when the scan reaches them and stay marked on the map. A brighter hub rings louder, and its pitch follows latitude.</dd>
         <dt>Longitude → time and stereo</dt><dd>The scan moves west to east and the sound moves from the left ear to the right.</dd>
-        <dt>Compare mode</dt><dd>Shows 2012 above 2023 and scans 2012 first, then 2023. One soft blip marks 2012 and two blips mark 2023.</dd>
+        <dt>Compare 2012 with another year</dt><dd>Pick any year from 2013 to 2023. 2012 is shown above that year, and 2012 is scanned first, then the chosen year. One soft blip marks 2012 and two blips mark the chosen year. 2012 can never be compared with itself.</dd>
+        <dt>Year tone</dt><dd>Each year’s total light sets how bright the sound is. Years are scaled between the dimmest and brightest of 2012–2023, so 2012 sounds dull and soft and 2023 bright and full.</dd>
+        <dt>Intensity</dt><dd>Master volume only: Soft (−10 dB), Medium (−4 dB) or Full (0 dB). It never changes the data mapping, so the sound is the same shape, just quieter or louder.</dd>
+        <dt>Stop and resume</dt><dd>Stop pauses the scan. Play then says Resume and continues from the same spot. Changing mode, dataset or year, or pressing Home, starts over.</dd>
         <dt>Year label</dt><dd>The year printed in NASA’s video is never analysed. It sits outside the map area we read, and that spot is also masked.</dd>
       </dl>
+    </section>
+    <section class="how" aria-labelledby="tt">
+      <h2 id="tt">Mapping table: what is data and what is artistic</h2>
+      <div class="tw"><table>
+        <caption>Every sound parameter, what controls it, and whether the rule is data or a design choice</caption>
+        <thead><tr><th scope="col">Sound</th><th scope="col">Controlled by</th><th scope="col">Exact rule</th><th scope="col">Data or artistic</th></tr></thead>
+        <tbody>
+        <tr><th scope="row">Pitch</th><td>Latitude</td><td>12 bands of 10° (70°N to 50°S). Band 1 is the lowest note, A2 = 110 Hz. Band 12 is the highest, C5 = 523 Hz. Higher north means higher pitch.</td><td>Data: which band. Artistic: the A minor pentatonic notes. Pitch order is true, but steps are not equal in degrees.</td></tr>
+        <tr><th scope="row">Loudness</th><td>Light density in the band</td><td>Share of lit pixels, brightness weighted, in a cell of 4×32 px. Volume = (density ÷ 0.10, capped at 1) to the power 0.6. Anything under 0.15 is treated as dark and is completely silent; the rest is stretched back to 0 to 1. Same scale in every year.</td><td>Data: density. Artistic: the 0.6 curve and the 0.15 dark gate, chosen so faint specks do not hiss.</td></tr>
+        <tr><th scope="row">Time</th><td>Longitude</td><td>Scan west to east, 256 steps of 1.4°. Whole scan lasts 16 s ÷ speed.</td><td>Data</td></tr>
+        <tr><th scope="row">Left to right position</th><td>Longitude</td><td>Pan moves linearly from −0.85 (left) to +0.85 (right).</td><td>Data</td></tr>
+        <tr><th scope="row">Bell</th><td>Bright hubs</td><td>A hub is a local loudness peak (7 steps × 3 bands) at 0.45 or above, top 48 per frame. It rings one octave above its band note, louder when brighter.</td><td>Data: place and brightness. Artistic: bell timbre and the 0.45 threshold.</td></tr>
+        <tr><th scope="row">Soft low pad</th><td>Same as loudness</td><td>A quiet sine one octave below each note at 0.35 of its volume.</td><td>Artistic only. It carries no extra data.</td></tr>
+        <tr><th scope="row">Bright or dull tone</th><td>Year’s total light</td><td>Mean loudness of the whole map, scaled between the dimmest and brightest year. Filter 1800 to 7000 Hz, only while light is sounding. Dark areas stay silent.</td><td>Data: direction. Artistic: the stretch. Real differences are small, so this is exaggerated on purpose. The true numbers are read out when you change year.</td></tr>
+        <tr><th scope="row">Blips before a scan</th><td>Compare mode</td><td>One blip = 2012, two blips = the chosen year.</td><td>Artistic cue</td></tr>
+        <tr><th scope="row">Intensity</th><td>Your choice</td><td>Master volume: Soft −10 dB, Medium −4 dB, Full 0 dB.</td><td>Not data</td></tr>
+        </tbody></table></div>
+    </section>
+    <section class="how" aria-labelledby="ot">
+      <h2 id="ot">Mapping table: Global Sea Surface Currents and Temperature</h2>
+      <div class="tw"><table>
+        <caption>Same layout as night lights. Pitch, time and left-right position work exactly the same way.</caption>
+        <thead><tr><th scope="col">Sound</th><th scope="col">Controlled by</th><th scope="col">Exact rule</th><th scope="col">Data or artistic</th></tr></thead>
+        <tbody>
+        <tr><th scope="row">Pitch, time, left to right</th><td>Latitude and longitude</td><td>Identical to the night lights table above.</td><td>Data, with the same artistic scale</td></tr>
+        <tr><th scope="row">Loudness</th><td>Water temperature</td><td>Colour of each pixel is turned into degrees Celsius with a table read from NASA’s own colour bar (0 to 32 °C). Volume = temperature ÷ 32, times min(1, coverage ÷ 0.30). Cells with under 10% coloured pixels (land, ice, black) are silent.</td><td>Data: temperature. Artistic: straight-line volume scale and the coverage rule.</td></tr>
+        <tr><th scope="row">Brightness of the tone</th><td>Water temperature</td><td>Low-pass filter at 500 Hz × 2 to the power (temperature ÷ 8): 500 Hz at 0 °C, 8000 Hz at 32 °C. Warmer sounds brighter.</td><td>Data: temperature. Artistic: the frequency range.</td></tr>
+        <tr><th scope="row">Bell</th><td>Warm pools</td><td>A local loudness peak of 0.85 or more (about 27 °C or warmer with full coverage) rings one octave above its note.</td><td>Data: place and warmth. Artistic: bell sound and threshold.</td></tr>
+        <tr><th scope="row">Currents</th><td>Not sonified</td><td>The flow lines are drawn in the picture, but speed and direction cannot be measured from a still frame. Only temperature is heard.</td><td>Stated limitation</td></tr>
+        <tr><th scope="row">Spoken mean temperature</th><td>All coloured pixels, 50°S to 70°N</td><td>Average of decoded temperatures, weighted by cosine of latitude so polar bands do not count too much. Read the change between dates, not the absolute value: streak brightness and the picture’s colours bias it.</td><td>Data, approximate</td></tr>
+        </tbody></table></div>
     </section>
   </div>
 
@@ -90,7 +126,7 @@ a{color:var(--gold)}
     <select id="ds"></select>
     <label for="mode">Mode</label>
     <select id="mode"></select>
-    <label for="year">Year <output id="yo"></output></label>
+    <label for="year"><span id="yl">Year</span> <output id="yo"></output></label>
     <input id="year" type="range" min="0" max="11" step="1" value="11">
     <label for="speed">Speed <output id="so"></output></label>
     <input id="speed" type="range" min="0" max="3" step="1" value="1">
@@ -107,6 +143,7 @@ a{color:var(--gold)}
   <h2 id="dt">Disclaimer</h2>
   <p>Earth Jukebox is an independent project made for the NASA International Space Apps Challenge. NASA does not endorse this project or any non-U.S. Government entity and is not responsible for the content of non-U.S. Government websites.</p>
   <p>Imagery comes from NASA’s Scientific Visualization Studio (SVS), including “Change in Night Lights between 2012 and 2023 – EIC Version” (<a href="https://svs.gsfc.nasa.gov/5313/">SVS 5313</a>), based on NASA Black Marble data from Suomi NPP VIIRS. We turn NASA’s published visualizations into sound. The frames are display-stretched pictures, not calibrated measurements, so the sound shows patterns and direction of change, not exact values. Choices such as the musical scale and instrument tones are artistic; what is loud, high or rising comes from the data. Do not use it for scientific analysis or safety decisions.</p>
+  <p>Sea-surface data: “Global Sea Surface Currents and Temperature” (<a href="https://svs.gsfc.nasa.gov/3912/">SVS 3912</a>), NASA/Goddard Space Flight Center Scientific Visualization Studio. It shows model output from ECCO2 (MIT/JPL) from 25 March 2007 to 3 March 2008: colours are sea surface temperature and flow lines are surface currents. Animators: Greg Shirah, Horace Mitchell and Eric Sokolowsky. Producer: Michael Starobin. Scientists: Hong Zhang (UCLA) and Dimitris Menemenlis (NASA JPL/Caltech). Temperatures here are read back from the colour bar of the picture, so they are approximate and not model values.</p>
   <p>All sound is synthesized live in your browser with the Web Audio API; no recordings are used. Font: Atkinson Hyperlegible (Braille Institute) and Unbounded, under the SIL Open Font License. This code was written with assistance from Claude (Anthropic).</p>
 </section>
 </main>
@@ -115,23 +152,31 @@ a{color:var(--gold)}
 <script>
 "use strict";
 const SN=Sonify,$=id=>document.getElementById(id),cv=$("cv"),c2=cv.getContext("2d"),head=$("head"),fx=$("fx").getContext("2d");
-const SPEEDS=[0.5,1,1.5,2],INTENS=[0.6,0.85,1],INAMES=["Soft","Medium","Full"];
-const imgs={},data={};let ds=0,playing=false,info=null,shown="",ready=false,raf=0;
+const SPEEDS=[0.5,1,1.5,2],INTENS=[0.3,0.6,1],INAMES=["Soft","Medium","Full"];
+const ST={};let imgs={},data={},ds=0,playing=false,info=null,paused=null,shown="",ready=false,raf=0;
 
+const D=()=>SN.DATASETS[ds],F=()=>D().frames||[],fk=i=>(F()[i]||{k:""}).k,yi=()=>Math.min(+$("year").value,Math.max(0,F().length-1)),ylab=()=>(F()[yi()]||{label:""}).label,lab=k=>(F().find(f=>f.k===k)||{label:k}).label;
+function useStore(){const s=ST[ds]||(ST[ds]={imgs:{},data:{}});imgs=s.imgs;data=s.data}
 function say(m){const s=$("status");s.textContent="";setTimeout(()=>s.textContent=m,30)}
 SN.DATASETS.forEach((d,i)=>{const o=document.createElement("option");o.value=i;o.textContent=d.name+(d.ready?"":" (frames not added yet)");$("ds").appendChild(o)});
 function fillModes(){const m=$("mode");m.innerHTML="";(SN.DATASETS[ds].modes||["Not available yet"]).forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t;m.appendChild(o)})}
-const keys=()=>{const m=+$("mode").value;return m===0?["y"+SN.YEARS[+$("year").value]]:m===1?["y2012","y2023"]:["chg"]};
-const vk=()=>+$("mode").value===1?"cmp":keys()[0];
-function labels(){$("yo").textContent=SN.YEARS[+$("year").value];$("so").textContent=SPEEDS[+$("speed").value]+"×";$("io").textContent=INAMES[+$("inten").value];
-  $("year").disabled=+$("mode").value!==0||!SN.DATASETS[ds].ready;$("year").setAttribute("aria-valuetext",String(SN.YEARS[+$("year").value]))}
-const hc=k=>data[k]?" · "+data[k].hubs.length+" bright hubs":"";
+const keys=()=>{const m=+$("mode").value;return m===1?[fk(0),fk(yi())]:[fk(yi())]};
+const sig=()=>ds+":"+keys().join(),clearPause=()=>{paused=null;if(ready)$("play").textContent="Play"};
+const vk=()=>+$("mode").value===1?"cmp|"+fk(yi()):keys()[0];
+function labels(){const n=F().length||1,cm=+$("mode").value===1;$("year").max=n-1;$("year").min=cm?1:0;
+  if(+$("year").value<+$("year").min)$("year").value=$("year").min;if(+$("year").value>n-1)$("year").value=n-1; /* the first date can never be compared with itself */
+  $("yo").textContent=ylab();$("so").textContent=SPEEDS[+$("speed").value]+"×";$("io").textContent=INAMES[+$("inten").value];
+  $("year").disabled=!D().ready;$("yl").textContent=cm?"Compare "+((F()[0]||{}).label||"")+" with":(D().unit||"Year");$("year").setAttribute("aria-valuetext",ylab())}
+const facts=i=>{const f=F()[i],b=F()[0],d=f&&data[f.k],o=b&&data[b.k];if(!d||!o)return"";
+  if(D().kind==="sst"){const dt=d.meanT-o.meanT;return ". Mean sea surface temperature, 50 south to 70 north, about "+d.meanT.toFixed(1)+" degrees Celsius"+(i?", "+(dt>=0?"plus ":"minus ")+Math.abs(dt).toFixed(1)+" versus "+b.label:"")+". "+(d.lit*100).toFixed(0)+" percent of map cells sounding."}
+  return ". Light index "+d.level.toFixed(3)+(i?", "+(d.level>=o.level?"plus ":"minus ")+Math.abs((d.level/o.level-1)*100).toFixed(1)+" percent versus "+b.label:"")+". "+(d.lit*100).toFixed(1)+" percent of map cells lit."};
+const hc=k=>data[k]&&data[k].hubs.length?" · "+data[k].hubs.length+" "+(D().hubLabel||"hubs"):"";
 function show(k){
-  const two=k==="cmp";if(shown===k||(two?!(imgs.y2012&&imgs.y2023):!imgs[k]))return;shown=k;
+  const two=k.slice(0,4)==="cmp|",y2=k.slice(4),ik=k,k0=fk(0);if(shown===k||(two?!(imgs[k0]&&imgs[y2]):!imgs[ik]))return;shown=k;
   cv.height=$("fx").height=two?1152:576;$("map").classList.toggle("two",two);
-  const draw=(im,y)=>{const f=im.naturalWidth/2048;c2.drawImage(im,0,0,1024*f,im.naturalHeight,0,y,1024,576)};
-  if(two){draw(imgs.y2012,0);draw(imgs.y2023,576)}else draw(imgs[k],0);
-  $("cap").textContent=(two?"2012":k.slice(1))+hc(two?"y2012":k);$("cap2").textContent="2023"+hc("y2023");$("cap2").style.display=two?"block":"none";
+  const draw=(im,y)=>{const c=D().crop,w=im.naturalWidth,h=im.naturalHeight;c2.drawImage(im,c[0]*w,c[1]*h,c[2]*w,c[3]*h,0,y,1024,576)};
+  if(two){draw(imgs[k0],0);draw(imgs[y2],576)}else draw(imgs[ik],0);
+  $("cap").textContent=lab(two?k0:k)+hc(two?k0:k);$("cap2").textContent=lab(y2)+hc(y2);$("cap2").style.display=two?"block":"none";
 }
 const load=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(src);i.src=src});
 async function boot(){
@@ -139,21 +184,25 @@ async function boot(){
   if(!d.ready){$("play").textContent="Data not added yet";say(d.name+": frames and sonification rules are coming soon.");return}
   $("play").textContent="Loading data…";
   try{
-    const list=d.years.map(y=>["y"+y,"year_"+y+".jpg",false]);
-    for(const [k,f,c] of list){if(!imgs[k]){imgs[k]=await load(d.folder+f);data[k]=SN.analyze(imgs[k],c)}}
+    if(d.config&&!d.frames){const c=await (await fetch(d.config)).json();d.frames=c.frames;d.crop=c.crop}
+    if(d.kind==="sst"&&!d.lutData)d.lutData=await (await fetch(d.lutFile)).json();
+    useStore();labels();
+    for(const f of d.frames){if(!imgs[f.k]){imgs[f.k]=await load(d.folder+f.file);data[f.k]=SN.analyze(imgs[f.k],d)}}
+    if(d.kind==="lights")SN.normalize(data,d.frames.map(f=>f.k));
     ready=true;$("play").disabled=false;$("play").textContent="Play";show(vk());say("Ready. Press Space to play.");
   }catch(e){$("play").textContent="Could not load data";say("Could not load "+e+". Open this page with Live Server from the repository root.")}
 }
 function play(){
-  if(!ready)return;SN.ensure(INTENS[+$("inten").value]);stop(true);
-  info=SN.play(keys(),data,16/SPEEDS[+$("speed").value]);playing=true;head.style.display="block";$("play").textContent="Stop";say("Playing");raf=requestAnimationFrame(vis);
+  if(!ready)return;SN.ensure(INTENS[+$("inten").value]);
+  const from=paused&&paused.sig===sig()?paused.i:0;paused=null;stop(true);
+  info=SN.play(keys(),data,16/SPEEDS[+$("speed").value],from);playing=true;head.style.display="block";$("play").textContent="Stop";say((from?"Resuming":"Playing")+facts(yi()));raf=requestAnimationFrame(vis);
 }
 function vis(){
   if(!playing)return;const i=Math.max(0,Math.floor(SN.clock()/info.dt));
-  if(i>=info.total){stop();say("Finished");return}
+  if(i>=info.total){stop(true);clearPause();say("Finished");return}
   const cmp=+$("mode").value===1,seg=Math.floor(i/info.L),s=Math.min(i%info.L,info.steps),k=keys()[seg];
   head.style.left=(s/info.steps*100)+"%";head.style.top=cmp?seg*50+"%":"0";head.style.bottom=cmp?(1-seg)*50+"%":"0";
-  show(cmp?"cmp":k);draw(data[k],s,cmp?seg*576:0);raf=requestAnimationFrame(vis);
+  show(vk());draw(data[k],s,cmp?seg*576:0);raf=requestAnimationFrame(vis);
 }
 function draw(d,s,oy){ /* highlights on the picture: band glow at the scan bar, rings on bright hubs */
   const G=SN.GEO;fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);const x=s*G.COLW+G.COLW/2;
@@ -163,18 +212,18 @@ function draw(d,s,oy){ /* highlights on the picture: band glow at the scan bar, 
     if(age<1){fx.strokeStyle="rgba(255,236,170,"+(1-age)+")";fx.lineWidth=2;fx.beginPath();fx.arc(hx,hy,8+30*age,0,6.283);fx.stroke()}
     fx.fillStyle="rgba(255,236,170,.6)";fx.beginPath();fx.arc(hx,hy,2.5,0,6.283);fx.fill()}
 }
-function stop(quiet){fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);const was=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();if(ready)$("play").textContent="Play";if(was&&!quiet)say("Stopped")}
+function stop(quiet){fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);if(playing&&info)paused={sig:sig(),i:Math.max(0,Math.floor(SN.clock()/info.dt))};const was=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();if(ready)$("play").textContent=paused?"Resume":"Play";if(was&&!quiet)say("Stopped")}
 const toggle=()=>playing?stop():play();
-const home=()=>{stop(true);SN.ensure(INTENS[+$("inten").value]);SN.chime();$("ds").focus();say("Home. Choose a dataset.")};
-const setting=()=>say("Dataset "+SN.DATASETS[ds].name+", mode "+$("mode").selectedOptions[0].text+", year "+SN.YEARS[+$("year").value]+", speed "+SPEEDS[+$("speed").value]+"×, intensity "+INAMES[+$("inten").value]+(playing?", playing.":", stopped."));
+const home=()=>{stop(true);clearPause();SN.ensure(INTENS[+$("inten").value]);SN.chime();$("ds").focus();say("Home. Choose a dataset.")};
+const setting=()=>say("Dataset "+SN.DATASETS[ds].name+", mode "+$("mode").selectedOptions[0].text+", "+(D().unit||"year").toLowerCase()+" "+ylab()+", speed "+SPEEDS[+$("speed").value]+"×, intensity "+INAMES[+$("inten").value]+(playing?", playing.":", stopped."));
 
-$("ds").onchange=()=>{stop(true);ds=+$("ds").value;fillModes();labels();shown="";boot()};
-$("mode").onchange=()=>{stop(true);shown="";labels();SN.ensure(INTENS[+$("inten").value]);SN.tick(+$("mode").value,3);if(ready)show(vk());say("Mode: "+$("mode").selectedOptions[0].text)};
-[["year",12],["speed",4],["inten",3]].forEach(([id,n])=>{
+$("ds").onchange=()=>{stop(true);paused=null;ds=+$("ds").value;fillModes();labels();shown="";boot()};
+$("mode").onchange=()=>{stop(true);clearPause();shown="";labels();SN.ensure(INTENS[+$("inten").value]);SN.tick(+$("mode").value,3);if(ready)show(vk());say("Mode: "+$("mode").selectedOptions[0].text)};
+[["year",0],["speed",4],["inten",3]].forEach(([id,n])=>{
   const el=$(id);
-  el.addEventListener("input",()=>{SN.ensure(INTENS[+$("inten").value]);labels();SN.tick(+el.value,n);
-    if(id==="inten")SN.setIntensity(INTENS[+el.value]);else{stop(true);if(id==="year"&&ready){shown="";show(keys()[0])}}
-    say(id==="year"?"Year "+SN.YEARS[+el.value]:id==="speed"?"Speed "+SPEEDS[+el.value]+"×":"Intensity "+INAMES[+el.value])});
+  el.addEventListener("input",()=>{SN.ensure(INTENS[+$("inten").value]);labels();SN.tick(+el.value,id==="year"?Math.max(2,F().length):n);
+    if(id==="inten")SN.setIntensity(INTENS[+el.value]);else{stop(true);if(id==="year")clearPause();if(id==="year"&&ready){shown="";show(vk())}}
+    say(id==="year"?D().unit+" "+ylab()+facts(yi()):id==="speed"?"Speed "+SPEEDS[+el.value]+"×":"Intensity "+INAMES[+el.value])});
   el.addEventListener("keydown",e=>{const v=+el.value;if((e.key==="ArrowLeft"||e.key==="ArrowDown")&&v===+el.min||(e.key==="ArrowRight"||e.key==="ArrowUp")&&v===+el.max){SN.ensure(INTENS[+$("inten").value]);SN.bump();say("Limit reached")}});
 });
 $("play").onclick=()=>{SN.ensure(INTENS[+$("inten").value]);toggle()};
