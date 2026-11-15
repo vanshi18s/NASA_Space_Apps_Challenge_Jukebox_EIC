@@ -8,7 +8,7 @@ Built by **Team Phoenix Flames** for the **2026 NASA International Space Apps Ch
 
 **Live demo:** https://vanshi18s.github.io/NASA_Space_Apps_Challenge_Jukebox_EIC/
 **Source code:** https://github.com/vanshi18s/NASA_Space_Apps_Challenge_Jukebox_EIC
-**2-minute demo video:** _add link_
+**2-minute demo video:** https://www.youtube.com/watch?v=_N2YOuGaRWQ
 
 <!-- Add a screenshot: docs/screenshot.png -->
 
