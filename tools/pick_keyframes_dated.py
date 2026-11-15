@@ -1,8 +1,3 @@
-"""Pick one steady frame per date in data/<dataset>/config.json and save it as the keyframe.
- python tools/pick_keyframes_dated.py ocean
-Needs the series made by extract_series.py (--start/--end must cover exactly config start..end).
-Frame number for a date = (date - start) / (end - start) * (frames - 1) + 1, i.e. the video is assumed to play the timeline at constant speed.
-It then looks +-radius frames for the least blurry/moving one."""
 import cv2, glob, json, os, sys, numpy as np
 from datetime import datetime
 ds = sys.argv[1]; cfg = json.load(open(os.path.join("data", ds, "config.json")))

@@ -1,6 +1,3 @@
-"""Check that the crop in config.json really is the whole globe (180W-180E, 90N-90S).
- python tools/verify_geo.py <dataset> <keyframe.jpg>      -> data/<dataset>/verify_geo.jpg
-Draws the equator, the 12 sound bands (70N-50S) and known coastal points. Every red cross must sit on its coast."""
 import cv2, json, os, sys
 ds, kf = sys.argv[1], sys.argv[2]; cfg = json.load(open(os.path.join("data", ds, "config.json")))
 im = cv2.imread(kf); h, w = im.shape[:2]; cx, cy, cw, ch = cfg["crop"]

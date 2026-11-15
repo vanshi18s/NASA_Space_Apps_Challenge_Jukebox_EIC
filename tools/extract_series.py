@@ -1,6 +1,3 @@
-"""Cut a NASA video into numbered JPEG frames.   python tools/extract_series.py <dataset> <video> [--start S] [--end S] [--fps F] [--width W]
- --start/--end: seconds of the video that hold the real data (skip intro, title card, zooms, credits).
- Frames go to data/<dataset>/series/series_001.jpg ... and the settings are printed so you can note them in config.json."""
 import cv2, os, argparse
 p = argparse.ArgumentParser(); p.add_argument("dataset"); p.add_argument("video")
 p.add_argument("--start", type=float, default=0); p.add_argument("--end", type=float, default=None)

@@ -1,8 +1,3 @@
-"""Build the temperature lookup table (hue -> degrees C) from NASA's colour bar image.
-Usage:  python tools/build_lut.py <colorbar.png> <dataset_folder> <tmin> <tmax> [row_y]
-Example: python tools/build_lut.py colorbar.png data/ocean 0 32
-Writes <dataset_folder>/lut.json. Nothing is guessed: every value is read from the bar's own pixels,
-and the round-trip error (bar -> hue -> temperature -> compare) is printed so you can quote it."""
 import sys, json, os
 import cv2, numpy as np
 
@@ -16,17 +11,16 @@ if y is None:   # pick the row through the bar that has the most saturated, brig
     y = max(cand)[1]
 row = hsv[y, :int(W*.67)]
 xs = np.where((row[:, 1] > 120) & (row[:, 2] > 150))[0]
-x0, x1 = int(xs.min()) + 2, int(xs.max()) - 4          # drop the dark border pixels
+x0, x1 = int(xs.min()) + 2, int(xs.max()) - 4          
 print(f"bar row y={y}, x from {x0} to {x1}")
 hue = np.unwrap(np.deg2rad(hsv[y, x0:x1 + 1, 0] * 2.0))
 hue = np.rad2deg(hue)
-if hue[0] < hue[-1]: hue = -hue                         # make it run blue (high hue) -> red (low hue)
-hue = np.minimum.accumulate(hue)                        # remove tiny noise so the table is strictly one-way
+if hue[0] < hue[-1]: hue = -hue                         
+hue = np.minimum.accumulate(hue)                        
 temps = np.linspace(tmin, tmax, len(hue))
-step = (tmax - tmin) / 64.0                              # 65 table points
+step = (tmax - tmin) / 64.0                              
 tt = np.arange(tmin, tmax + step / 2, step)
 hh = np.interp(tt, temps, hue)
-# round trip check on every bar pixel
 back = np.interp(-hue, -hh, tt)
 err = np.abs(back - temps)
 out = {"tmin": tmin, "tmax": tmax, "temp": [round(float(t), 3) for t in tt], "hue": [round(float(h), 2) for h in hh],

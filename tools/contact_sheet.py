@@ -1,4 +1,3 @@
-"""Contact sheets so you can SEE which frame is which.   python tools/contact_sheet.py <dataset> [every_n]"""
 import cv2, glob, os, sys
 ds = sys.argv[1]; every = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 files = sorted(glob.glob(os.path.join("data", ds, "series", "series_*.jpg")))[::every]

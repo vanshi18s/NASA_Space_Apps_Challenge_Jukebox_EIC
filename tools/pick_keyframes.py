@@ -5,9 +5,9 @@ import numpy as np
 SRC = os.path.join("data", "nightlights")
 OUT = os.path.join(SRC, "keyframes")
 
-# year: (rough frame number from the contact sheets, search radius in frames)
+
 YEARS = {
-    2012: (2, 1),    # video starts on 2012, so only the first few frames are valid
+    2012: (2, 1),   
     2013: (8, 2),
     2014: (16, 2),
     2015: (21, 2),
@@ -18,12 +18,12 @@ YEARS = {
     2020: (51, 2),
     2021: (56, 2),
     2022: (61, 2),
-    2023: (80, 10),  # 2023 is held for ~3 seconds, plenty of room
+    2023: (80, 10), 
 }
-CHANGE = (160, 25)   # change map is on screen from ~11 s to 20 s
+CHANGE = (160, 25)  
 
-# where the year label sits, as fractions of the frame (read from thumbnails; refine later)
-LABEL_BOX = (0.46, 0.42, 0.60, 0.60)   # x0, y0, x1, y1
+
+LABEL_BOX = (0.46, 0.42, 0.60, 0.60)   
 
 
 def path(n):
@@ -63,7 +63,7 @@ def crop_label(im):
     x0, y0, x1, y1 = LABEL_BOX
     c = im[int(y0 * h):int(y1 * h), int(x0 * w):int(x1 * w)]
     c = cv2.resize(c, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
-    # lift the very dark label so it is readable on screen (display only, not used for analysis)
+   
     return cv2.convertScaleAbs(c, alpha=4.0, beta=0)
 
 

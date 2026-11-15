@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#050817">
-<meta name="description" content="Explore NASA Earth visualizations and experience global patterns through sound with Frequency_vista.">
+<meta name="description" content="Explore NASA Earth visualizations and experience global patterns through sound with Frequency_Vista.">
 <title>Frequency_Vista — Hear the Earth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 :root{
   color-scheme:dark;
   --bg:#030609;
-  --panel:#080e17;
+  --panel:rgba(8,14,23,.75);
   --line:rgba(0,190,255,.22);
   --green:#b6ff00;
   --blue:#00b7ff;
@@ -21,25 +21,27 @@
   --white:#f5f8ff;
   --muted:#91a3b7;
   --shadow:0 12px 40px rgba(0,0,0,.4);
+  --glass:rgba(10,20,35,.6);
+  --glass-border:rgba(0,183,255,.25);
 }
 
 *{box-sizing:border-box}
 
 html,body{
   margin:0;
-  min-height:100%;
+  height:100vh;
+  overflow:hidden;
   background:#030609;
 }
 
 body{
   color:var(--white);
-  font:400 13px/1.5 "DM Sans",sans-serif;
+  font:400 12px/1.4 "DM Sans",sans-serif;
   background:
     radial-gradient(ellipse at 12% 0%,rgba(0,183,255,.15),transparent 34%),
     radial-gradient(ellipse at 90% 5%,rgba(182,255,0,.08),transparent 30%),
     radial-gradient(ellipse at 50% 100%,rgba(0,60,120,.15),transparent 45%),
     #030609;
-  overflow-x:hidden;
 }
 
 body::before{
@@ -60,23 +62,26 @@ body::before{
 main{
   position:relative;
   z-index:1;
-  width:min(1450px,100%);
+  width:100%;
+  max-width:1450px;
+  height:100%;
   margin:auto;
-  padding:17px 27px;
+  padding:10px 20px;
+  display:flex;
+  flex-direction:column;
 }
-
-/* HEADER */
 
 .hero{
   display:flex;
   align-items:center;
-  gap:16px;
-  margin:0 0 17px;
+  gap:12px;
+  margin:0 0 10px;
+  flex:none;
 }
 
 .planet-wrap{
-  width:58px;
-  height:58px;
+  width:42px;
+  height:42px;
   flex:none;
   display:grid;
   place-items:center;
@@ -84,28 +89,25 @@ main{
 }
 
 .planet{
-  width:43px;
-  height:43px;
+  width:32px;
+  height:32px;
   border-radius:50%;
-  background:
-    radial-gradient(circle at 30% 30%,#c0ffdc,#00a9da 35%,#10417d 70%,#020819);
-  box-shadow:
-    0 0 15px rgba(0,183,255,.65),
-    0 0 32px rgba(182,255,0,.12);
+  background:radial-gradient(circle at 30% 30%,#c0ffdc,#00a9da 35%,#10417d 70%,#020819);
+  box-shadow:0 0 10px rgba(0,183,255,.65),0 0 20px rgba(182,255,0,.12);
 }
 
 .planet::before{
   content:"";
   position:absolute;
-  inset:8px;
+  inset:5px;
   border-radius:50%;
   border:1px solid rgba(182,255,0,.65);
 }
 
 .orbit{
   position:absolute;
-  width:67px;
-  height:24px;
+  width:50px;
+  height:18px;
   border:1px solid rgba(0,183,255,.7);
   border-radius:50%;
   transform:rotate(-28deg);
@@ -114,42 +116,38 @@ main{
 .orbit::after{
   content:"";
   position:absolute;
-  width:5px;
-  height:5px;
+  width:4px;
+  height:4px;
   border-radius:50%;
   background:var(--yellow);
-  top:2px;
-  left:9px;
-  box-shadow:0 0 9px var(--yellow);
+  top:1px;
+  left:6px;
+  box-shadow:0 0 7px var(--yellow);
 }
 
-.eyebrow,.section-kicker{
-  color:var(--green);
-  font:700 9px "Space Grotesk",sans-serif;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-}
-
-.eyebrow{margin:0 0 4px}
-
-h1{
-  font:700 clamp(25px,3vw,36px)/1 "Space Grotesk",sans-serif;
-  letter-spacing:-1.8px;
-  margin:0;
+.hero-copy h1{
+  font:700 22px/1 "Space Grotesk",sans-serif;
+  letter-spacing:-1px;
+  margin:0 0 2px;
   color:white;
 }
-
-h1 span{
+.hero-copy h1 span{
   background:linear-gradient(100deg,var(--green),var(--blue));
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
 }
-
 .hero-sub{
   color:var(--muted);
   font-size:11px;
-  margin:5px 0 0;
+  margin:0;
+}
+.eyebrow{
+  color:var(--green);
+  font:700 8px "Space Grotesk",sans-serif;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  margin:0 0 2px;
 }
 
 .hero-badge{
@@ -158,526 +156,310 @@ h1 span{
   background:rgba(0,183,255,.06);
   color:var(--green);
   border-radius:20px;
-  padding:7px 12px;
-  font-size:9px;
+  padding:5px 10px;
+  font-size:8px;
   letter-spacing:.12em;
   text-transform:uppercase;
-  white-space:nowrap;
+  backdrop-filter:blur(4px);
 }
-
 .hero-badge span{
-  width:6px;height:6px;
+  width:5px;height:5px;
   display:inline-block;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 10px var(--green);
-  margin-right:7px;
-}
-
-/* REMOVE UNNECESSARY CONTENT */
-
-.intro-strip,
-.insight-grid,
-.technical,
-.disc{
-  display:none!important;
-}
-
-/* MAIN TWO-COLUMN LAYOUT */
-
-.layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 305px;
-  gap:17px;
-  align-items:start;
-}
-
-.visual-column{min-width:0}
-
-.section-kicker{
-  margin:0 0 8px 2px;
-  color:var(--blue);
-}
-
-/* VISUALIZATION */
-
-.map-card{
-  background:#02060b;
-  border:1px solid rgba(0,183,255,.3);
-  border-radius:12px;
-  overflow:hidden;
-  max-width: 800px; /* Makes the single window a little bit smaller */
-  margin: 0 auto;
-  box-shadow:
-    0 0 20px rgba(0,183,255,.07),
-    var(--shadow);
-}
-
-.map-card-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 14px;
-  gap:10px;
-  background:linear-gradient(90deg,#081523,#090d17);
-  border-bottom:1px solid rgba(0,183,255,.19);
-}
-
-.map-heading{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  min-width:0;
-}
-
-.map-heading-mark{
-  width:26px;
-  height:26px;
-  display:grid;
-  place-items:center;
-  border-radius:7px;
-  background:rgba(182,255,0,.08);
-  color:var(--green);
-  border:1px solid rgba(182,255,0,.24);
-}
-
-.map-heading strong{
-  display:block;
-  font:600 12px "Space Grotesk",sans-serif;
-  color:white;
-}
-
-.map-heading small{
-  display:block;
-  color:var(--muted);
-  font-size:9px;
-}
-
-.map-status{
-  color:var(--green);
-  font-size:9px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  white-space:nowrap;
-}
-
-.map-status::before{
-  content:"";
-  display:inline-block;
-  width:6px;height:6px;
   border-radius:50%;
   background:var(--green);
   box-shadow:0 0 8px var(--green);
   margin-right:6px;
 }
 
-.map{
-  position:relative;
-  width:100%;
-  aspect-ratio: 16 / 9;
-  max-height: 55vh;
-  background:#010307;
+.layout{
+  display:flex;
+  gap:15px;
+  flex:1;
+  min-height:0;
+  align-items: stretch;
+}
+
+.visual-column{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:8px;
+}
+
+.glass-panel{
+  background:var(--glass);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--glass-border);
+  border-radius:10px;
+  padding:8px 12px;
+  box-shadow:var(--shadow);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex:none;
+}
+.accessibility-block { display: flex; align-items: center; gap: 12px; }
+.sv-label { color:var(--yellow); font:700 9px "Space Grotesk",sans-serif; text-transform:uppercase; letter-spacing:.1em; }
+.sv{
+  display:flex; gap:6px; align-items:center; color:var(--white); font-size:10px; cursor:pointer;
+  background: rgba(0,0,0,0.3); padding: 3px 6px; border-radius: 6px; border: 1px solid rgba(255,219,56,.3);
+}
+.sv input{margin:0;accent-color:var(--green);cursor:pointer;}
+.keyboard-hints{ color:var(--muted); font-size:9px; text-align: right; line-height:1.4; }
+.keyboard-hints kbd {
+  padding:1px 4px; border:1px solid rgba(0,183,255,.3); border-radius:3px;
+  color:var(--green); background:rgba(0,0,0,.4); font-size:8px;
+}
+
+.map-card{
+  background:var(--panel);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);
+  border-radius:12px;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  box-shadow:var(--shadow);
+}
+.map-card-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 12px; background:linear-gradient(90deg,rgba(8,21,35,.8),rgba(9,13,23,.8));
+  border-bottom:1px solid var(--line); flex:none;
+}
+.map-heading{ display:flex; align-items:center; gap:8px; min-width:0; }
+.map-heading-mark{
+  width:20px; height:20px; display:grid; place-items:center; border-radius:5px;
+  background:rgba(182,255,0,.08); color:var(--green); border:1px solid rgba(182,255,0,.24); font-size:9px;
+}
+.map-heading strong{display:block;font:600 11px "Space Grotesk",sans-serif;color:white;}
+.map-heading small{display:block;color:var(--muted);font-size:9px;}
+
+.map-status{
+  color:var(--green); font-size:8px; letter-spacing:.12em; text-transform:uppercase;
+  display:flex; align-items:center; gap:5px;
+}
+.map-status::before{ content:""; width:5px;height:5px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); }
+
+.map-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #010307;
+  padding: 10px;
+}
+
+.map {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.4);
 }
 
 .map.compare {
-  aspect-ratio: 16 / 18; /* Stacked layout aspect ratio */
-  max-height: 75vh; /* Fits vertically on the screen */
+  aspect-ratio: 16 / 18; 
+  max-width: 550px; 
 }
 
-canvas{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit: fill;
+canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: block;
+  border-radius: 4px;
 }
 
-#fx{
-  position:absolute;
-  left:0;
-  top:0;
-  pointer-events:none;
-  z-index:2;
-}
-
+#fx{z-index:2; pointer-events:none;}
 #head{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:2px;
-  background:var(--yellow);
-  box-shadow:0 0 9px 2px var(--yellow);
-  display:none;
-  z-index:3;
-  pointer-events:none;
+  position:absolute; top:0; bottom:0; width:2px;
+  background:var(--yellow); box-shadow:0 0 9px 2px var(--yellow);
+  display:none; z-index:3; pointer-events:none;
 }
 
 #cap,#cap2{
-  position:absolute;
-  top:10px;
-  z-index:4;
-  font:700 10px "Space Grotesk",sans-serif;
-  color:white;
-  text-shadow:0 2px 8px black;
-  background:rgba(0,0,0,.65);
-  padding:5px 9px;
-  border-radius:5px;
-  letter-spacing:.06em;
+  position:absolute; top:10px; z-index:4; font:700 11px "Space Grotesk",sans-serif;
+  color:white; text-shadow:0 2px 8px black; background:rgba(0,0,0,.65);
+  padding:4px 8px; border-radius:4px; letter-spacing:.06em;
 }
-
 #cap{left:10px}
 #cap2{left:10px; top:calc(50% + 10px); display:none}
 
-/* COMPARISON DIVIDER (Vertical Layout) */
-
 .map.compare::after{
-  content:"";
-  position:absolute;
-  top:50%;
-  left:0;
-  right:0;
-  height:1px;
-  background:var(--blue);
-  box-shadow:0 0 8px rgba(0,183,255,.6);
-  pointer-events:none;
-  z-index:2;
+  content:""; position:absolute; top:50%; left:0; right:0; height:1px;
+  background:var(--blue); box-shadow:0 0 8px rgba(0,183,255,.6);
+  pointer-events:none; z-index:2;
 }
-
-/* LOADING */
 
 .map-loading{
-  position:absolute;
-  inset:0;
-  z-index:5;
-  background:rgba(2,6,13,.96);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  gap:9px;
+  position:absolute; inset:0; z-index:5; background:rgba(2,6,13,.92); backdrop-filter:blur(3px);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px;
+  border-radius: 4px;
 }
-
 .map-loading.hidden{display:none}
-
 .loader-orbit{
-  width:34px;
-  height:34px;
-  border:2px solid rgba(0,183,255,.2);
-  border-top-color:var(--green);
-  border-right-color:var(--blue);
-  border-radius:50%;
+  width:30px; height:30px; border:2px solid rgba(0,183,255,.2);
+  border-top-color:var(--green); border-right-color:var(--blue); border-radius:50%;
   animation:spin 1s linear infinite;
 }
-
 @keyframes spin{to{transform:rotate(360deg)}}
-
-#loading-text{
-  color:var(--green);
-  font:600 11px "Space Grotesk",sans-serif;
-}
-
-#loading-sub{
-  color:var(--muted);
-  font-size:10px;
-}
-
-/* MAP FOOTER */
+#loading-text{color:var(--green);font:600 10px "Space Grotesk",sans-serif;}
 
 .map-foot{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 12px;
-  border-top:1px solid rgba(0,183,255,.17);
-  background:#070d16;
-  color:#91a3b7;
-  font-size:9px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
+  display:flex; justify-content:space-between; padding:4px 12px; border-top:1px solid var(--line);
+  background:rgba(7,13,22,.8); color:var(--muted); font-size:8px; letter-spacing:.08em; text-transform:uppercase; flex:none;
 }
-
-.map-foot span{display:flex;align-items:center;gap:6px}
-
-.map-foot i{
-  width:5px;height:5px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 7px var(--green);
-}
-
-/* CONTROL PANEL */
+.map-foot span{display:flex;align-items:center;gap:5px}
+.map-foot i{width:4px;height:4px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
 
 .panel{
-  position:relative;
-  border:1px solid rgba(0,183,255,.3);
-  border-radius:12px;
-  padding:17px;
-  background:linear-gradient(155deg,#0b1522,#070c15);
-  box-shadow:0 0 25px rgba(0,183,255,.07);
+  width:280px;
+  flex:none;
+  display:flex;
+  flex-direction:column;
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);
+  border-radius:10px;
+  padding:12px;
+  box-shadow:var(--shadow);
+  overflow-y:auto;
 }
+.panel::-webkit-scrollbar { width: 4px; }
+.panel::-webkit-scrollbar-thumb { background: rgba(0,183,255,.3); border-radius: 4px; }
 
 .panel-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding-bottom:12px;
-  margin-bottom:15px;
-  border-bottom:1px solid rgba(0,183,255,.2);
+  display:flex; justify-content:space-between; align-items:center; padding-bottom:8px;
+  margin-bottom:8px; border-bottom:1px solid var(--line); flex:none;
 }
-
-.panel-head h2{
-  font:600 16px "Space Grotesk",sans-serif;
-  margin:0;
-  color:white;
-}
-
+.panel-head h2{font:600 13px "Space Grotesk",sans-serif;margin:0;color:white;}
 .deck-tag{
-  color:var(--green);
-  font-size:8px;
-  letter-spacing:.12em;
-  border:1px solid rgba(182,255,0,.25);
-  background:rgba(182,255,0,.06);
-  padding:5px 8px;
-  border-radius:5px;
+  color:var(--green); font-size:8px; letter-spacing:.12em; border:1px solid rgba(182,255,0,.25);
+  background:rgba(182,255,0,.06); padding:3px 5px; border-radius:4px;
 }
 
-.control-group{margin-bottom:13px}
+.navpad{margin:0 0 8px;padding:6px;border:1px solid rgba(182,255,0,.35);border-radius:6px;background:rgba(182,255,0,.05); flex:none;}
+.navnow{min-height:24px;margin:0 0 4px;padding:3px 6px;border-radius:4px;background:rgba(0,0,0,.5);border:1px solid var(--glass-border);color:var(--white);font:600 11px/1.2 "Space Grotesk",sans-serif;}
+.navnow b{display:block;color:var(--yellow);font-size:8px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+.navgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.navgrid button{height:28px;border-radius:4px;border:1px solid rgba(0,183,255,.3);background:rgba(7,20,33,.6);color:var(--blue);font:700 10px "Space Grotesk",sans-serif;cursor:pointer;}
+.navgrid button:hover{background:rgba(0,183,255,.15);box-shadow:0 0 10px rgba(0,183,255,.2);}
+.navgrid button:active{background:rgba(182,255,0,.18);color:var(--green);}
 
-label{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:6px;
-  color:#eaf1ff;
-  font:600 10px "Space Grotesk",sans-serif;
-}
+.controls-wrap{ flex:1; display:flex; flex-direction:column; gap:8px; }
+.control-group{ padding:4px 5px; border:1px solid transparent; border-radius:6px; transition:border-color .15s,background .15s; }
+.control-group:focus-within{border-color:var(--yellow);background:rgba(255,219,56,.07);}
 
-label output{
-  color:var(--yellow);
-  font:600 11px "DM Sans",sans-serif;
-}
-
+label{ display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:2px; color:#eaf1ff; font:600 11px "Space Grotesk",sans-serif; }
+label output{color:var(--yellow);font:600 11px "DM Sans",sans-serif;}
 select{
-  width:100%;
-  height:39px;
-  padding:0 12px;
-  border:1px solid rgba(0,183,255,.32);
-  border-radius:7px;
-  background:#060c15;
-  color:white;
-  font-size:11px;
-  cursor:pointer;
+  width:100%; height:28px; padding:0 8px; border:1px solid rgba(0,183,255,.32); border-radius:6px;
+  background:rgba(6,12,21,.8); color:white; font-size:11px; cursor:pointer;
 }
+select:focus{border-color:var(--green);outline:none;box-shadow:0 0 8px rgba(182,255,0,.13);}
 
-select:focus{
-  border-color:var(--green);
-  outline:none;
-  box-shadow:0 0 8px rgba(182,255,0,.13);
-}
-
-select option{
-  background:#080e17;
-  color:white;
-}
-
-input[type=range]{
-  width:100%;
-  height:19px;
-  margin:0;
-  accent-color:var(--green);
-  cursor:pointer;
-}
-
-input[type=range]::-webkit-slider-runnable-track{
-  height:3px;
-  background:linear-gradient(90deg,var(--green),var(--blue));
-  border-radius:5px;
-}
-
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  width:13px;height:13px;
-  margin-top:-5px;
-  border:2px solid var(--green);
-  border-radius:50%;
-  background:#06101a;
-  box-shadow:0 0 9px var(--green);
-}
-
-.range-hints{
-  display:flex;
-  justify-content:space-between;
-  color:var(--muted);
-  font-size:9px;
-}
-
+input[type=range]{width:100%;height:12px;margin:0;accent-color:var(--green);cursor:pointer;}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:3px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;margin-top:-4px;border:2px solid var(--green);border-radius:50%;background:#06101a;box-shadow:0 0 8px var(--green);}
+.range-hints{display:flex;justify-content:space-between;color:var(--muted);font-size:9px;}
 input:disabled{opacity:.4}
 
-/* DATASET DESCRIPTION */
-
 .dataset-note{
-  padding:9px 10px;
-  margin:-4px 0 14px;
-  border-left:2px solid var(--green);
-  border-radius:0 5px 5px 0;
-  background:rgba(182,255,0,.045);
-  color:#a9bacb;
-  font-size:10px;
-  line-height:1.5;
+  padding:4px 6px; margin:-4px 0 0; border-left:2px solid var(--green); border-radius:0 4px 4px 0;
+  background:rgba(182,255,0,.05); color:#a9bacb; font-size:9px; line-height:1.3;
 }
-
-/* BUTTONS */
 
 .action-row{
-  display:grid;
-  grid-template-columns:1fr 42px;
-  gap:8px;
-  margin-top:18px;
+  display:grid; grid-template-columns:1fr 34px; gap:6px; margin-top:auto; padding:4px; border:1px solid transparent; border-radius:6px;
 }
+.action-row:focus-within{border-color:var(--yellow);background:rgba(255,219,56,.07);}
 
-button{
-  min-height:43px;
-  border-radius:7px;
-  cursor:pointer;
-  font:700 11px "Space Grotesk",sans-serif;
-  transition:.2s ease;
-}
+button{min-height:32px;border-radius:6px;cursor:pointer;font:700 11px "Space Grotesk",sans-serif;transition:.2s ease;}
+#play{ color:#061008; border:1px solid var(--green); background:var(--green); box-shadow:0 0 10px rgba(182,255,0,.18); }
+#play:hover:not(:disabled){background:#d0ff52;box-shadow:0 0 15px rgba(182,255,0,.35);}
+#play:disabled{opacity:.45;cursor:wait;}
+#home{ width:34px; color:var(--blue); background:rgba(7,20,33,.8); border:1px solid rgba(0,183,255,.4); font-size:14px; }
+#home:hover{background:rgba(0,183,255,.15);box-shadow:0 0 10px rgba(0,183,255,.2);}
+#status{ margin:4px 0 0; color:var(--yellow); font-size:10px; line-height:1.2; text-align: center; min-height: 24px; }
 
-#play{
-  color:#061008;
-  border:1px solid var(--green);
-  background:var(--green);
-  box-shadow:0 0 13px rgba(182,255,0,.18);
-}
+button:focus-visible,input[type=range]:focus-visible,select:focus-visible{outline:2px solid var(--yellow);outline-offset:2px;}
+.skip{position:absolute;left:-9999px;top:8px;z-index:99;padding:8px 12px;background:var(--yellow);color:#000;font:700 12px "Space Grotesk",sans-serif;border-radius:4px;}
+.skip:focus{left:8px}
 
-#play:hover:not(:disabled){
-  background:#d0ff52;
-  box-shadow:0 0 20px rgba(182,255,0,.35);
-}
-
-#play:disabled{opacity:.45;cursor:wait}
-
-#home{
-  width:42px;
-  color:var(--blue);
-  background:#071421;
-  border:1px solid rgba(0,183,255,.4);
-  font-size:18px;
-}
-
-#home:hover{
-  background:rgba(0,183,255,.13);
-  box-shadow:0 0 12px rgba(0,183,255,.2);
-}
-
-#status{
-  min-height:32px;
-  margin:10px 0 0;
-  color:var(--yellow);
-  font-size:10px;
-  line-height:1.5;
-}
-
-.keys{
-  padding-top:10px;
-  margin:7px 0 0;
-  border-top:1px solid rgba(0,183,255,.16);
-  color:var(--muted);
-  font-size:9px;
-  line-height:1.8;
-}
-
-kbd{
-  padding:2px 5px;
-  border:1px solid rgba(0,183,255,.3);
-  border-radius:4px;
-  color:var(--green);
-  background:#060c15;
-  font-size:9px;
-}
-
-/* DISCLAIMER FOOTER */
 .team-disclaimer {
-  text-align: center;
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(0,183,255,.2);
-  color: var(--muted);
-  font: 500 11px "Space Grotesk",sans-serif;
-  letter-spacing: .05em;
+  text-align: center; padding: 6px 0 0; margin-top: 8px; border-top: 1px solid var(--line);
+  color: var(--muted); font: 500 9px "Space Grotesk",sans-serif; letter-spacing: .05em; flex:none;
 }
-.team-disclaimer p {
-  margin: 0;
-}
+.team-disclaimer p { margin: 0; }
 
-/* RESPONSIVE LAPTOP LAYOUT */
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-@media(min-width:900px){
-  body{overflow-y:auto}
-  main{
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-  }
-}
-
-/* MOBILE */
-
-@media(max-width:899px){
-  body{overflow-y:auto}
-  main{height:auto;min-height:100vh;padding:15px}
-  .hero{margin-bottom:15px}
-  .hero-badge{display:none}
-  .layout{grid-template-columns:1fr}
-  .panel{grid-row:1}
-  .visual-column{grid-row:2}
-}
-
-@media(max-width:520px){
-  .planet-wrap{width:48px;height:48px}
-  .planet{width:36px;height:36px}
-  .orbit{width:55px;height:20px}
-  h1{font-size:26px}
-  .hero-sub{font-size:10px}
-  .map-foot{font-size:8px;padding:8px}
-  .map-heading strong{font-size:10px}
-  .map-heading small{font-size:8px}
+@media(max-width:900px){
+  body{overflow-y:auto; height:auto;}
+  main{height:auto; min-height:100vh;}
+  .layout{flex-direction:column;}
+  .panel{width:100%; max-width:500px; margin: 0 auto;}
 }
 </style>
 </head>
 <body>
+<a class="skip" href="#ds">Skip to listening controls</a>
 <main>
   <header class="hero">
     <div class="planet-wrap" aria-hidden="true"><div class="planet"></div><div class="orbit"></div></div>
     <div class="hero-copy">
       <p class="eyebrow">NASA EARTH OBSERVATIONS · SONIFIED</p>
-      <h1>Frequency_<span>vista</span></h1>
+      <h1>Frequency_<span>Vista</span></h1>
       <p class="hero-sub">The Earth information jukebox that turns the visuals into sonification.</p>
     </div>
-    <div class="hero-badge"><span></span> Explore · Listen · Discover</div>
+    <div class="hero-badge"><span></span> Explore · Listen</div>
   </header>
 
   <div class="layout">
     <section class="visual-column" aria-label="Earth data visualization">
-      <p class="section-kicker">01 / The visualization</p>
+      
+      <div class="glass-panel">
+        <div class="accessibility-block">
+          <span class="sv-label">Accessibility:</span>
+          <label class="sv" for="selfvoice" title="Turn on spoken feedback for blind navigation">
+            <input type="checkbox" id="selfvoice"> <span>Self-voicing (Blind Nav)</span>
+          </label>
+        </div>
+        <div class="keyboard-hints">
+           <kbd>↑</kbd><kbd>↓</kbd> Select &nbsp; <kbd>←</kbd><kbd>→</kbd> Adjust &nbsp; <kbd>P</kbd>/<kbd>Space</kbd> Play<br>
+           <kbd>I</kbd> Status &nbsp; <kbd>L</kbd> Legend &nbsp; <kbd>?</kbd> Help
+        </div>
+      </div>
+
       <div class="map-card">
         <div class="map-card-head">
           <div class="map-heading">
             <div class="map-heading-mark" aria-hidden="true">✧</div>
-            <div><strong id="map-title">Night Lights · Earth at night</strong><small id="map-subtitle">NASA Black Marble / Suomi NPP VIIRS</small></div>
+            <div><strong id="map-title">Night Lights</strong><small id="map-subtitle">NASA Black Marble / Suomi NPP VIIRS</small></div>
           </div>
           <div class="map-status">Data view</div>
         </div>
-        <div class="map" id="map" role="img" aria-label="NASA world map view.">
-          <canvas id="cv" width="1024" height="576"></canvas>
-          <canvas id="fx" width="1024" height="576"></canvas>
-          <div id="head"></div><div id="cap"></div><div id="cap2"></div>
-          <div class="map-loading" id="map-loading">
-            <div class="loader-orbit" aria-hidden="true"></div>
-            <div id="loading-text">Preparing your view of Earth</div>
-            <div id="loading-sub">Loading only the selected NASA frame</div>
+        
+        <div class="map-wrapper">
+          <div class="map" id="map" role="img" aria-label="NASA world map view.">
+            <canvas id="cv" width="1024" height="576"></canvas>
+            <canvas id="fx" width="1024" height="576"></canvas>
+            <div id="head"></div><div id="cap"></div><div id="cap2"></div>
+            <div class="map-loading" id="map-loading">
+              <div class="loader-orbit" aria-hidden="true"></div>
+              <div id="loading-text">Preparing view</div>
+            </div>
           </div>
         </div>
+
         <div class="map-foot"><span><i></i> West → East scan</span><span>12 latitude bands</span><span>256 sonic steps</span></div>
       </div>
     </section>
@@ -685,41 +467,52 @@ kbd{
     <aside class="panel" aria-label="Sonification controls">
       <div class="panel-head"><h2>Listening controls</h2><span class="deck-tag">Control deck</span></div>
 
-      <div class="control-group">
-        <label for="ds">Choose a data story</label>
-        <select id="ds" aria-label="Choose a NASA dataset"></select>
-      </div>
-      <p class="dataset-note" id="dataset-note">City lights seen from orbit, using NASA Black Marble imagery from Suomi NPP VIIRS.</p>
-
-      <div class="control-group">
-        <label for="mode">Explore mode</label>
-        <select id="mode"></select>
-      </div>
-
-      <div class="control-group">
-        <label for="year"><span id="yl">Year</span><output id="yo">2023</output></label>
-        <input id="year" type="range" min="0" max="11" step="1" value="11">
-        <div class="range-hints"><span id="range-start">2012</span><span id="range-end">2023</span></div>
+      <div class="navpad" role="group" aria-label="On-screen navigation buttons">
+        <div class="navnow" id="navnow" aria-hidden="true"><b>Selected control</b><span id="navnow-text">Press Down or tap ▼ to begin</span></div>
+        <div class="navgrid">
+          <button type="button" id="nvUp" aria-label="Previous control">▲ Up</button>
+          <button type="button" id="nvDown" aria-label="Next control">▼ Down</button>
+          <button type="button" id="nvLeft" aria-label="Decrease value">◀ Less</button>
+          <button type="button" id="nvRight" aria-label="Increase value">▶ More</button>
+        </div>
       </div>
 
-      <div class="control-group">
-        <label for="speed">Playback speed <output id="so">1×</output></label>
-        <input id="speed" type="range" min="0" max="3" step="1" value="1">
-        <div class="range-hints"><span>Slow</span><span>Fast</span></div>
-      </div>
+      <div class="controls-wrap">
+        <div class="control-group">
+          <label for="ds">Data story</label>
+          <select id="ds" aria-label="Choose a NASA dataset"></select>
+        </div>
+        <p class="dataset-note" id="dataset-note">City lights seen from orbit.</p>
 
-      <div class="control-group">
-        <label for="inten">Sound intensity <output id="io">Medium</output></label>
-        <input id="inten" type="range" min="0" max="2" step="1" value="1">
-        <div class="range-hints"><span>Soft</span><span>Full</span></div>
+        <div class="control-group">
+          <label for="mode">Explore mode</label>
+          <select id="mode"></select>
+        </div>
+
+        <div class="control-group">
+          <label for="year"><span id="yl">Year</span><output id="yo">2023</output></label>
+          <input id="year" type="range" min="0" max="11" step="1" value="11">
+          <div class="range-hints"><span id="range-start">2012</span><span id="range-end">2023</span></div>
+        </div>
+
+        <div class="control-group">
+          <label for="speed">Playback speed <output id="so">1×</output></label>
+          <input id="speed" type="range" min="0" max="3" step="1" value="1">
+          <div class="range-hints"><span>Slow</span><span>Fast</span></div>
+        </div>
+
+        <div class="control-group">
+          <label for="inten">Sound intensity <output id="io">Medium</output></label>
+          <input id="inten" type="range" min="0" max="2" step="1" value="1">
+          <div class="range-hints"><span>Soft</span><span>Full</span></div>
+        </div>
       </div>
 
       <div class="action-row">
-        <button id="play" disabled>Loading NASA data…</button>
-        <button id="home" type="button" aria-label="Stop and reset playback" title="Stop and reset playback">↺</button>
+        <button id="play" aria-keyshortcuts="P Space" disabled>Loading...</button>
+        <button id="home" type="button" aria-label="Reset playback" title="Reset playback">↺</button>
       </div>
-      <p id="status" role="status" aria-live="polite">Preparing the selected data frame.</p>
-      <p class="keys"><kbd>Space</kbd> Play / Stop &nbsp; <kbd>H</kbd> Reset &nbsp; <kbd>I</kbd> Read current settings.<br>Changing the year or dataset resets the current scan.</p>
+      <p id="status" role="status" aria-live="polite">Preparing...</p>
     </aside>
   </div>
 
@@ -742,20 +535,38 @@ const yi=()=>Math.min(+$('year').value,Math.max(0,F().length-1));
 const ylab=()=>(F()[yi()]||{label:""}).label;
 const lab=k=>(F().find(f=>f.k===k)||{label:k}).label;
 function useStore(){const s=ST[ds]||(ST[ds]={imgs:{},data:{},pending:{}});imgs=s.imgs;data=s.data}
-function say(message){$("status").textContent=message}
-function setMapLoading(on,title,sub){
+
+let selfVoice=false;
+try{selfVoice=localStorage.getItem("fv_voice")==="1"}catch(e){}
+function say(message){$("status").textContent=message;speak(message)}
+function speak(text){
+  if(!selfVoice||!("speechSynthesis" in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/°C/g," degrees Celsius").replace(/°/g," degrees"));
+  u.rate=1.05;
+  u.onstart=()=>SN.setIntensity(INTENS[+$('inten').value]*.3);
+  const back=()=>SN.setIntensity(INTENS[+$('inten').value]);
+  u.onend=back;u.onerror=back;speechSynthesis.speak(u);
+}
+function setSelfVoice(on,announce){
+  selfVoice=on;$("selfvoice").checked=on;
+  $("status").setAttribute("aria-live",on?"off":"polite");
+  try{localStorage.setItem("fv_voice",on?"1":"0")}catch(e){}
+  if(announce){if(on)speak("Self voicing on. Press V to turn it off.");else{if("speechSynthesis" in window)speechSynthesis.cancel();$("status").textContent="Self voicing off."}}
+}
+
+function setMapLoading(on,title){
   const overlay=$("map-loading");
   overlay.classList.toggle("hidden",!on);
   if(title)$("loading-text").textContent=title;
-  if(sub)$("loading-sub").textContent=sub;
 }
 function setDatasetCopy(){
   const ocean=D().kind==="sst";
-  $("map-title").textContent=ocean?"Global Ocean · Sea surface currents":"Night Lights · Earth at night";
-  $("map-subtitle").textContent=ocean?"NASA ECCO2 model visualization / SVS 3912":"NASA Black Marble / Suomi NPP VIIRS";
+  $("map-title").textContent=ocean?"Global Ocean":"Night Lights";
+  $("map-subtitle").textContent=ocean?"NASA ECCO2 / SVS 3912":"NASA Black Marble / Suomi NPP";
   $("dataset-note").textContent=ocean
-    ?"Explore global sea-surface temperature patterns. The visible current-flow lines are not sonified in this version."
-    :"Explore city lights seen from orbit, using NASA Black Marble imagery from Suomi NPP VIIRS.";
+    ?"Explore global sea-surface temperature patterns."
+    :"Explore city lights seen from orbit.";
 }
 SN.DATASETS.forEach((dataset,index)=>{
   const option=document.createElement("option");option.value=index;option.textContent=dataset.kind==="sst"?"Global Sea Surface Currents":"Night Lights";$("ds").appendChild(option);
@@ -766,8 +577,9 @@ function fillModes(){
 }
 const keys=()=>{const selected=fk(yi());return +$("mode").value===1?[fk(0),selected]:[selected]};
 const sig=()=>ds+":"+keys().join(",");
-function clearPause(){paused=null;if(ready)$("play").textContent="▶  Play sonification"}
+function clearPause(){paused=null;if(ready)$("play").textContent="▶ Play"}
 const vk=()=>+$('mode').value===1?"cmp|"+fk(yi()):keys()[0];
+
 function labels(){
   const frames=F(),count=frames.length||1,compare=+$('mode').value===1;
   const min=compare?1:0,max=Math.max(0,count-1);
@@ -776,9 +588,12 @@ function labels(){
   if(+$('year').value>max)$('year').value=max;
   $('yo').textContent=ylab();$('so').textContent=SPEEDS[+$('speed').value]+"×";$('io').textContent=INAMES[+$('inten').value];
   $('year').disabled=!D().ready||!frames.length;
-  $('yl').textContent=compare?"Compare "+((frames[0]||{}).label||"first date")+" with":(D().unit||"Year");
+  $('yl').textContent=compare?"Compare "+((frames[0]||{}).label||"start")+" with":(D().unit||"Year");
 
-  $('year').setAttribute("aria-valuetext",ylab());
+  $('year').setAttribute("aria-valuetext",compare?ylab()+", compared":ylab());
+  $('speed').setAttribute("aria-valuetext",SPEEDS[+$('speed').value]+"x speed");
+  $('inten').setAttribute("aria-valuetext",INAMES[+$('inten').value]);
+  describeMap();
   $('range-start').textContent=frames[0]?.label||"—";
   $('range-end').textContent=frames[frames.length-1]?.label||"—";
 }
@@ -787,13 +602,15 @@ function facts(index){
   if(!current)return "";
   if(D().kind==="sst"){
     const difference=baseline&&index?current.meanT-baseline.meanT:null;
-    return ". Approximate mean sea-surface temperature, 50°S to 70°N: "+current.meanT.toFixed(1)+"°C"+
-      (difference===null?"":" ("+(difference>=0?"+":"−")+Math.abs(difference).toFixed(1)+"°C versus "+base.label+")")+
-      ". "+(current.lit*100).toFixed(0)+"% of map cells sounding.";
+    return " Avg temp: "+current.meanT.toFixed(1)+"°C"+(difference===null?"":" ("+(difference>=0?"+":"−")+Math.abs(difference).toFixed(1)+"°C).");
   }
-  return ". Light index "+current.level.toFixed(3)+". "+(current.lit*100).toFixed(1)+"% of map cells lit.";
+  return " Light index "+current.level.toFixed(3)+".";
 }
-const hc=key=>data[key]&&data[key].hubs.length?" · "+data[key].hubs.length+" "+(D().hubLabel||"hubs"):"";
+function describeMap(){
+  const f=F()[yi()],c=f&&data[f.k];if(!f)return;
+  $("map").setAttribute("aria-label","NASA visualization map. "+D().unit+" "+f.label+"."+(c?facts(yi()):""));
+}
+const hc=key=>data[key]&&data[key].hubs.length?" · "+data[key].hubs.length+" hubs":"";
 
 function show(key){
   const two=key.slice(0,4)==="cmp|";
@@ -801,127 +618,102 @@ function show(key){
   const first=fk(0);
 
   if(two?!(imgs[first]&&imgs[second]):!imgs[key])return false;
-
-  if(shown===key){
-    setMapLoading(false);
-    return true;
-  }
-
+  if(shown===key){setMapLoading(false);return true;}
   shown=key;
 
   const canvasWidth=1024;
-  const canvasHeight=two?1152:576; // Stacked vertically
+  const canvasHeight=two?1152:576;
 
-  cv.width=canvasWidth;
-  cv.height=canvasHeight;
-
-  $("fx").width=canvasWidth;
-  $("fx").height=canvasHeight;
+  cv.width=canvasWidth; cv.height=canvasHeight;
+  $("fx").width=canvasWidth; $("fx").height=canvasHeight;
 
   $("map").classList.toggle("compare",two);
 
   const drawImage=(image,x,y)=>{
-    const crop=D().crop;
-    const w=image.naturalWidth;
-    const h=image.naturalHeight;
-
-    c2.drawImage(
-      image,
-      crop[0]*w,
-      crop[1]*h,
-      crop[2]*w,
-      crop[3]*h,
-      x,
-      y,
-      1024,
-      576
-    );
+    const crop=D().crop, w=image.naturalWidth, h=image.naturalHeight;
+    c2.drawImage(image, crop[0]*w, crop[1]*h, crop[2]*w, crop[3]*h, x, y, 1024, 576);
   };
 
-  if(two){
-    drawImage(imgs[first],0,0);
-    drawImage(imgs[second],0,576); // Draw the second view directly beneath
-  }else{
-    drawImage(imgs[key],0,0);
-  }
+  if(two){ drawImage(imgs[first],0,0); drawImage(imgs[second],0,576); }
+  else{ drawImage(imgs[key],0,0); }
 
   $("cap").textContent=lab(two?first:key)+hc(two?first:key);
-
   $("cap2").textContent=lab(second)+hc(second);
   $("cap2").style.display=two?"block":"none";
 
-  setMapLoading(false);
-
-  return true;
+  setMapLoading(false); describeMap(); return true;
 }
 
 const load=source=>new Promise((resolve,reject)=>{
   const image=new Image();image.decoding="async";
-  image.onload=()=>resolve(image);image.onerror=()=>reject(new Error("Could not load frame: "+source));image.src=source;
+  image.onload=()=>resolve(image);image.onerror=()=>reject(new Error("Err: "+source));image.src=source;
 });
 async function ensureFrame(key){
   const dataset=D(),store=ST[ds]||(ST[ds]={imgs:{},data:{},pending:{}});
   if(store.data[key])return store.data[key];
   if(store.pending[key])return store.pending[key];
   const frame=dataset.frames.find(item=>item.k===key);
-  if(!frame)throw new Error("The selected frame is not listed in the dataset configuration.");
   const task=(async()=>{
     const image=store.imgs[key]||await load(dataset.folder+frame.file);
-    if(image.decode){try{await image.decode()}catch(error){}}
+    if(image.decode){try{await image.decode()}catch(e){}}
     store.imgs[key]=image;
-    await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+    await new Promise(r=>requestAnimationFrame(()=>r()));
     const result=SN.analyze(image,dataset);
-    store.data[key]=result;
-    return result;
+    store.data[key]=result; return result;
   })();
   store.pending[key]=task;
   try{return await task}finally{delete store.pending[key]}
 }
 async function ensureKeys(selectedKeys){await Promise.all([...new Set(selectedKeys)].map(ensureFrame))}
+
 async function boot(){
   const ticket=++bootSequence;stop(true);ready=false;shown="";
-  $("play").disabled=true;$("play").textContent="Loading NASA data…";
-  setMapLoading(true,"Preparing your view of Earth","Loading the selected NASA frame only");
+  $("play").disabled=true;$("play").textContent="Loading...";
+  setMapLoading(true,"Loading map data");
   setDatasetCopy();
   try{
     const dataset=D();
     if(dataset.config&&!dataset.frames){
-      const response=await fetch(dataset.config);if(!response.ok)throw new Error("Could not read "+dataset.config);
+      const response=await fetch(dataset.config);
       const config=await response.json();dataset.frames=config.frames;dataset.crop=config.crop;
     }
-    if(ticket!==bootSequence)return;
     if(dataset.kind==="sst"&&!dataset.lutData){
-      const response=await fetch(dataset.lutFile);if(!response.ok)throw new Error("Could not read "+dataset.lutFile);
+      const response=await fetch(dataset.lutFile);
       dataset.lutData=await response.json();
     }
     if(ticket!==bootSequence)return;
-    useStore();labels();
-    await ensureKeys(keys());
+    useStore();labels(); await ensureKeys(keys());
     if(ticket!==bootSequence)return;
-    ready=true;$("play").disabled=false;$("play").textContent="▶  Play sonification";
-    show(vk());say("Ready. Select Play sonification to hear this data frame."+(facts(yi())));
+    ready=true;$("play").disabled=false;$("play").textContent="▶ Play";
+    show(vk());say("Ready. Press P to play.");
   }catch(error){
     if(ticket!==bootSequence)return;
-    ready=false;$("play").disabled=true;$("play").textContent="Data could not load";
-    setMapLoading(true,"We couldn’t load this view",error.message+" · Open the project from its repository root using a local server.");
-    say("Could not load the selected data. Check that the data folders and JSON files are present.");
+    ready=false;$("play").disabled=true;$("play").textContent="Error";
+    setMapLoading(true,"Data load failed");
+    say("Error loading data files.");
   }
 }
+
 async function play(){
   if(!D().ready||playPending)return;
   const ticket=++playSequence,datasetIndex=ds,selectedKeys=keys().slice();playPending=true;
-  $("play").disabled=true;$("play").textContent="Preparing sound…";
-  setMapLoading(true,"Preparing the sonification","Only the selected frame(s) are analysed");
+  SN.ensure(INTENS[+$('inten').value]);
+  $("play").disabled=true;$("play").textContent="Wait...";
+  setMapLoading(true,"Preparing sound");
   try{
     await ensureKeys(selectedKeys);
     if(ticket!==playSequence||datasetIndex!==ds)return;
-    show(vk());SN.ensure(INTENS[+$('inten').value]);
-    const from=paused&&paused.sig===sig()?paused.i:0;paused=null;
+    show(vk());
+    const from=paused&&paused.sig===sig()?paused.i:0;
+    $("play").disabled=false;$("play").textContent="Ⅱ Starting...";
+    await announce((from?"Resuming. ":"Playing. ")+playIntro());
+    if(ticket!==playSequence||datasetIndex!==ds)return;
+    SN.ensure(INTENS[+$('inten').value]);paused=null;
     info=SN.play(selectedKeys,data,16/SPEEDS[+$('speed').value],from);
-    playing=true;$("play").disabled=false;$("play").textContent="Ⅱ  Stop / pause";
-    say((from?"Resuming":"Playing")+facts(yi()));head.style.display="block";raf=requestAnimationFrame(vis);
+    playing=true;$("play").disabled=false;$("play").textContent="Ⅱ Pause";
+    head.style.display="block";raf=requestAnimationFrame(vis);
   }catch(error){
-    if(ticket===playSequence){say("Playback could not start: "+error.message);$("play").disabled=false;$("play").textContent="▶  Try again";}
+    if(ticket===playSequence){say("Playback error.");$("play").disabled=false;$("play").textContent="▶ Retry";}
   }finally{
     if(ticket===playSequence)playPending=false;
   }
@@ -929,87 +721,40 @@ async function play(){
 
 function vis(){
   if(!playing)return;
-
   const index=Math.max(0,Math.floor(SN.clock()/info.dt));
+  if(index>=info.total){stop(true);clearPause();say("Done.");return;}
+  const compare=+$("mode").value===1, segment=Math.floor(index/info.L), step=Math.min(index%info.L,info.steps), key=keys()[segment];
 
-  if(index>=info.total){
-    stop(true);
-    clearPause();
-    say("Playback complete.");
-    return;
-  }
-
-  const compare=+$("mode").value===1;
-  const segment=Math.floor(index/info.L);
-  const step=Math.min(index%info.L,info.steps);
-  const key=keys()[segment];
-
+  head.style.left=(step/info.steps*100)+"%";
   if(compare){
-    head.style.left=(step/info.steps*100)+"%";
-    if(segment === 0) {
-      head.style.top="0%";
-      head.style.bottom="50%";
-    } else {
-      head.style.top="50%";
-      head.style.bottom="0%";
-    }
-  }else{
-    head.style.left=(step/info.steps*100)+"%";
-    head.style.top="0";
-    head.style.bottom="0";
-  }
+    if(segment === 0){ head.style.top="0%"; head.style.bottom="50%"; } 
+    else { head.style.top="50%"; head.style.bottom="0%"; }
+  }else{ head.style.top="0"; head.style.bottom="0"; }
 
   show(vk());
-
   draw(data[key],step,compare?segment*576:0);
-
   raf=requestAnimationFrame(vis);
 }
 
-
 function draw(d,s,yOffset=0){
   const G=SN.GEO;
-
   fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);
-
   const x=s*G.COLW+G.COLW/2;
-
   for(let b=0;b<G.BANDS;b++){
     const a=d[(Math.min(s,G.STEPS-1)*G.BANDS+b)*2];
-
     if(!(a>0)||s>=G.STEPS)continue;
-
     fx.fillStyle="rgba(182,255,0,"+(.15+.6*a)+")";
-
     const w=6+70*a;
-
-    fx.fillRect(
-      x-w,
-      yOffset+G.BAND_TOP+b*G.BAND_H+4,
-      2*w,
-      G.BAND_H-8
-    );
+    fx.fillRect(x-w, yOffset+G.BAND_TOP+b*G.BAND_H+4, 2*w, G.BAND_H-8);
   }
-
   for(const h of d.hubs){
     if(h.s>s)continue;
-
-    const age=(s-h.s)*info.dt;
-    const hx=h.s*G.COLW+G.COLW/2;
-    const hy=yOffset+h.y;
-
+    const age=(s-h.s)*info.dt, hx=h.s*G.COLW+G.COLW/2, hy=yOffset+h.y;
     if(age<1){
-      fx.strokeStyle="rgba(255,219,56,"+(1-age)+")";
-      fx.lineWidth=2;
-      fx.beginPath();
-      fx.arc(hx,hy,8+30*age,0,6.283);
-      fx.stroke();
+      fx.strokeStyle="rgba(255,219,56,"+(1-age)+")"; fx.lineWidth=2;
+      fx.beginPath(); fx.arc(hx,hy,8+30*age,0,6.283); fx.stroke();
     }
-
-    fx.fillStyle="rgba(255,219,56,.8)";
-    fx.beginPath();
-    fx.arc(hx,hy,2.5,0,6.283);
-    fx.fill();
+    fx.fillStyle="rgba(255,219,56,.8)"; fx.beginPath(); fx.arc(hx,hy,2.5,0,6.283); fx.fill();
   }
 }
 
@@ -1018,69 +763,170 @@ function stop(quiet){
   fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);
   if(playing&&info)paused={sig:sig(),i:Math.max(0,Math.floor(SN.clock()/info.dt))};
   const wasPlaying=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();
-  if(ready){$("play").disabled=false;$("play").textContent=paused?"▶  Resume sonification":"▶  Play sonification";}
-  if(wasPlaying&&!quiet)say("Playback paused. Press Resume to continue from this position.");
+  if(ready){$("play").disabled=false;$("play").textContent=paused?"▶ Resume":"▶ Play";}
+  if(wasPlaying&&!quiet)say("Paused.");
 }
-const toggle=()=>playing?stop():play();
-const home=()=>{stop(true);clearPause();SN.ensure(INTENS[+$('inten').value]);SN.chime();$('ds').focus();say("Playback reset. Your selected dataset and date are unchanged.")};
-const setting=()=>say("Dataset: "+D().name+". Mode: "+$('mode').selectedOptions[0].text+". "+(D().unit||"Year")+": "+ylab()+". Speed: "+SPEEDS[+$('speed').value]+"×. Intensity: "+INAMES[+$('inten').value]+(playing?". Playing.":". Stopped."));
+const toggle=()=>playing?stop():(playPending?cancelPending():play());
+function cancelPending(){if("speechSynthesis" in window)speechSynthesis.cancel();stop(true);say("Cancelled.")}
+function playIntro(){return $('ds').selectedOptions[0].text+", "+ylab()+".";}
+let viaKeyboard=false;
+function announce(text){
+  $("status").textContent=text;
+  if(selfVoice&&"speechSynthesis" in window){
+    return new Promise(resolve=>{
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(text.replace(/°C/g," degrees Celsius").replace(/°/g," degrees"));
+      u.rate=1.05;let done=false,to=0;
+      const fin=()=>{if(done)return;done=true;clearTimeout(to);setTimeout(resolve,250)};
+      u.onend=fin;u.onerror=fin;to=setTimeout(fin,8000);speechSynthesis.speak(u);
+    });
+  }
+  if(viaKeyboard)return new Promise(resolve=>setTimeout(resolve,Math.min(3000,600+text.length*40)));
+  return Promise.resolve();
+}
+const home=()=>{stop(true);clearPause();SN.ensure(INTENS[+$('inten').value]);SN.chime();$('ds').focus();say("Reset.")};
+
 async function refreshMap(){
   const ticket=++refreshSequence,requested=keys().slice();
   if(!F().length)return;
-  $("play").disabled=true;$("play").textContent="Loading frame…";
-  setMapLoading(true,"Switching data view","Fetching and analysing the selected frame");
+  $("play").disabled=true;$("play").textContent="Loading...";
+  setMapLoading(true,"Switching view");
   try{
     await ensureKeys(requested);
     if(ticket!==refreshSequence)return;
-    show(vk());ready=true;$("play").disabled=false;$("play").textContent=paused?"▶  Resume sonification":"▶  Play sonification";
-    say("Ready."+facts(yi()));
+    show(vk());ready=true;$("play").disabled=false;$("play").textContent=paused?"▶ Resume":"▶ Play";
+    say("Ready.");
   }catch(error){
     if(ticket!==refreshSequence)return;
-    $("play").disabled=true;$("play").textContent="Data could not load";
-    setMapLoading(true,"This frame could not be loaded",error.message);
-    say("Could not load the selected frame. Check the data file path.");
+    $("play").disabled=true;$("play").textContent="Error";
+    setMapLoading(true,"Error"); say("Load failed.");
   }
 }
 
-$("ds").onchange=()=>{
-  stop(true);clearPause();ds=+$('ds').value;useStore();fillModes();setDatasetCopy();labels();shown="";
-  refreshSequence++;boot();
-};
-$("mode").onchange=()=>{
-  stop(true);clearPause();shown="";labels();SN.ensure(INTENS[+$('inten').value]);SN.tick(+$('mode').value,3);refreshMap();
-};
+$("ds").onchange=()=>{stop(true);clearPause();ds=+$('ds').value;useStore();fillModes();setDatasetCopy();labels();shown=""; refreshSequence++;boot();};
+$("mode").onchange=()=>{stop(true);clearPause();shown="";labels();SN.ensure(INTENS[+$('inten').value]);SN.tick(+$('mode').value,3);refreshMap();};
 [["year",0],["speed",4],["inten",3]].forEach(([id,tickCount])=>{
   const element=$(id);
   element.addEventListener("input",()=>{
     SN.ensure(INTENS[+$('inten').value]);labels();SN.tick(+element.value,id==="year"?Math.max(2,F().length):tickCount);
-    if(id==="inten"){SN.setIntensity(INTENS[+element.value]);say("Sound intensity: "+INAMES[+element.value]+".");}
+    if(id==="inten"){SN.setIntensity(INTENS[+element.value]);say("Intensity: "+INAMES[+element.value]);}
     else{
       stop(true);
       if(id==="year"){
         clearPause();clearTimeout(refreshTimer);
         refreshTimer=setTimeout(()=>{shown="";refreshMap()},100);
-        say(D().unit+" "+ylab()+" selected. Preparing this frame…");
-      }else say("Playback speed: "+SPEEDS[+element.value]+"×.");
+      }else say("Speed: "+SPEEDS[+element.value]+"×.");
     }
   });
   element.addEventListener("keydown",event=>{
     const value=+element.value;
     if((event.key==="ArrowLeft"||event.key==="ArrowDown")&&value===+element.min||
        (event.key==="ArrowRight"||event.key==="ArrowUp")&&value===+element.max){
-      SN.ensure(INTENS[+$('inten').value]);SN.bump();say("You have reached the end of this range.");
+      SN.ensure(INTENS[+$('inten').value]);SN.bump();say("End of range.");
     }
   });
 });
 $("play").onclick=()=>toggle();
 $("home").onclick=home;
+$("selfvoice").onchange=e=>setSelfVoice(e.target.checked,true);
+
+const NAV=["ds","mode","year","speed","inten","play","home"];
+const NAMES={ds:"Data story",mode:"Explore mode",year:null,speed:"Playback speed",inten:"Sound intensity",play:"Play",home:"Reset"};
+let lastNav="ds";
+const navList=()=>NAV.filter(id=>!$(id).disabled);
+const aud=()=>SN.ensure(INTENS[+$('inten').value]);
+function valueText(id){
+  const el=$(id);
+  if(id==="ds")return el.selectedOptions[0].text;
+  if(id==="mode")return el.selectedOptions[0].text;
+  if(id==="year")return ylab();
+  if(id==="speed")return SPEEDS[+el.value]+"x";
+  if(id==="inten")return INAMES[+el.value];
+  if(id==="play")return $("play").textContent.replace(/[▶Ⅱ]/g,"").trim();
+  return "Reset";
+}
+function nameOf(id){return id==="year"?D().unit||"Year":NAMES[id]}
+function describeControl(id){
+  const list=navList(),pos=list.indexOf(id)+1;
+  return nameOf(id)+": "+valueText(id)+".";
+}
+document.addEventListener("focusin",e=>{if(NAV.includes(e.target.id)){lastNav=e.target.id;navStarted=true}});
+let navStarted=false;
+function moveNav(dir){
+  aud();
+  const list=navList(),onNav=NAV.includes(document.activeElement.id);
+  if(!onNav&&!navStarted){ SN.tick(0,list.length);$(list[0]).focus(); if(selfVoice)speak(describeControl(list[0]));return}
+  const cur=onNav?document.activeElement.id:lastNav;
+  let i=list.indexOf(cur);if(i<0)i=dir>0?-1:list.length;
+  const j=i+dir;
+  if(j<0||j>=list.length){SN.bump();say(dir>0?"Last.":"First.");return}
+  SN.tick(j,list.length); $(list[j]).focus();
+  if(selfVoice)speak(describeControl(list[j]));
+}
+function changeValue(id,dir){
+  aud();const el=$(id);
+  if(el.disabled||id==="play"||id==="home")return;
+  if(el.tagName==="SELECT"){
+    const n=el.options.length,k=el.selectedIndex+dir;
+    if(k<0||k>=n){SN.bump();return}
+    el.selectedIndex=k;el.dispatchEvent(new Event("change",{bubbles:true}));
+    SN.tick(k,Math.max(2,n)); if(selfVoice)speak(valueText(id)); return;
+  }
+  const v=+el.value+dir*(+el.step||1);
+  if(v<+el.min||v>+el.max){SN.bump();return}
+  el.value=v;el.dispatchEvent(new Event("input",{bubbles:true}));
+}
+async function legend(){
+  aud();stop(true); await announce("Legend. Low tone is South. High tone is North.");
+  SN.blip(110,.45,.2,"sine",.1);SN.blip(523,.45,.2,"sine",.7);
+}
+function cycle(id){
+  const el=$(id),n=el.options.length;if(n<2)return;
+  aud();el.selectedIndex=(el.selectedIndex+1)%n;el.dispatchEvent(new Event("change",{bubbles:true}));
+  SN.tick(el.selectedIndex,Math.max(2,n));
+}
+function replay(){stop(true);clearPause();aud();play()}
+
+addEventListener("pointerdown",()=>{viaKeyboard=false},true);
 addEventListener("keydown",event=>{
+  viaKeyboard=true;
   if(event.ctrlKey||event.metaKey||event.altKey)return;
-  const target=event.target,tag=target.tagName;
-  if(event.key===" "&&tag!=="BUTTON"&&tag!=="SELECT"&&tag!=="INPUT"&&tag!=="TEXTAREA"){
-    event.preventDefault();SN.ensure(INTENS[+$('inten').value]);toggle();
-  }else if((event.key==="h"||event.key==="H")&&tag!=="INPUT"&&tag!=="SELECT"){home();}
-  else if((event.key==="i"||event.key==="I")&&tag!=="INPUT"&&tag!=="SELECT"){setting();}
-});
+  const k=event.key,t=event.target,tag=t.tagName,isBtn=tag==="BUTTON",isChk=t.id==="selfvoice";
+  const eat=()=>{event.preventDefault();event.stopPropagation()};
+  if(isChk&&k!=="ArrowUp"&&k!=="ArrowDown"&&k!=="Escape")return;
+  switch(k){
+    case "ArrowDown":eat();moveNav(1);break;
+    case "ArrowUp":eat();moveNav(-1);break;
+    case "ArrowRight":if(NAV.includes(t.id)){eat();changeValue(t.id,1)}break;
+    case "ArrowLeft":if(NAV.includes(t.id)){eat();changeValue(t.id,-1)}break;
+    case " ":if(!isBtn){eat();aud();toggle()}break;
+    case "Enter":if(tag==="SELECT"){eat();if(selfVoice)speak(describeControl(t.id))}break;
+    default:
+      if(k==="Escape"){eat();home();return}
+      switch(k.toLowerCase()){
+        case "p":eat();aud();toggle();break;
+        case "h":eat();home();break;
+        case "i":eat();say("Settings read.");break;
+        case "l":eat();legend();break;
+        case "d":eat();cycle("ds");break;
+        case "m":eat();cycle("mode");break;
+        case "r":eat();replay();break;
+        case "v":eat();setSelfVoice(!selfVoice,true);break;
+      }
+  }
+},true);
+
+const curNav=()=>NAV.includes(document.activeElement.id)?document.activeElement.id:lastNav;
+function updateNavNow(){
+  const id=NAV.includes(document.activeElement.id)?document.activeElement.id:(navStarted?lastNav:null);
+  $("navnow-text").textContent=id?nameOf(id)+" — "+valueText(id):"Tap ▼ to begin";
+}
+[["nvUp",()=>moveNav(-1)],["nvDown",()=>moveNav(1)],
+ ["nvLeft",()=>{const id=curNav();if(id==="play"||id==="home"||!navStarted){}else changeValue(id,-1)}],
+ ["nvRight",()=>{const id=curNav();if(id==="play"||id==="home"||!navStarted){}else changeValue(id,1)}]
+].forEach(([id,fn])=>{const b=$(id);b.addEventListener("mousedown",e=>e.preventDefault());b.addEventListener("click",()=>{fn();setTimeout(updateNavNow,0)})});
+["focusin","input","change","click"].forEach(ev=>document.addEventListener(ev,()=>setTimeout(updateNavNow,0)));
+setSelfVoice(selfVoice,false);
 
 fillModes();labels();setDatasetCopy();useStore();boot();
 </script>
