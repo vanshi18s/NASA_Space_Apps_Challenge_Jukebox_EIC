@@ -1,3 +1,4 @@
+
 /* Earth Jukebox – sonification logic (rule-based, no ML).
    Data property -> sound parameter, all on FIXED ranges so years and datasets are comparable.
    Latitude -> pitch | light -> loudness | longitude -> scan time + stereo pan | change sign -> glide direction */
@@ -8,18 +9,15 @@ const LUM_FLOOR=40,LUM_SPAN=160;   /* gray land tops out near 36; city lights st
 const CH_POS=0.15,CH_NEG=0.41;     /* (B-R)/(B+R) at the purple and orange ends of NASA’s colour bar */
 const DIFF_FULL=0.125,SST_S=0.40,SST_V=0.10,COVER_MIN=0.10,COVER_FULL=0.30,HUB_SST=0.85,F_MAX=0.10,HUB_AMP=0.45,MAX_HUBS=48,GAP=10,VOICE=0.22,SCALE=[0,3,5,7,10]; /* A minor pentatonic, base 110 Hz */
 
-/* Add a dataset = add frames + one entry here. Only Night Lights has frames prepared so far. */
+/* The two active NASA datasets used by this experience. */
 const YEARS=[2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023];
 const DATASETS=[
  {id:"night",kind:"lights",unit:"Year",name:"Night Lights 2012 vs 2023 (SVS 5313)",ready:true,svs:"https://svs.gsfc.nasa.gov/5313/",hubLabel:"bright hubs",
   folder:"data/nightlights/keyframes/",crop:[0,0,.5,1],mask:[[995,308,29,40]],
   frames:YEARS.map(y=>({k:"y"+y,label:String(y),file:"year_"+y+".jpg"})),modes:["Single year","Compare 2012 with another year (2013 to 2023)"]},
  {id:"ocean",kind:"sst",unit:"Date",name:"Global Sea Surface Currents and Temperature (SVS 3912)",ready:true,svs:"https://svs.gsfc.nasa.gov/3912/",hubLabel:"warm-water bells",
-  folder:"data/ocean/keyframes/",config:"data/ocean/config.json",lutFile:"data/ocean/lut.json",modes:["Single date","Compare first date with another date"]},
- {id:"lightning",name:"Lightning from the ISS (SVS 5011)",ready:false,svs:"https://svs.gsfc.nasa.gov/5011/"},
- {id:"aerosols",name:"GEOS Aerosols (SVS 5669)",ready:false,svs:"https://svs.gsfc.nasa.gov/5669/"},
- {id:"co2",name:"DYAMOND Global CO\u2082 (SVS 5196)",ready:false,svs:"https://svs.gsfc.nasa.gov/5196/"},
- {id:"forest",name:"GEDI Forest Height (SVS 4950)",ready:false,svs:"https://svs.gsfc.nasa.gov/4950/"}];
+  folder:"data/ocean/keyframes/",config:"data/ocean/config.json",lutFile:"data/ocean/lut.json",modes:["Single date","Compare first date with another date"]}
+];
 
 /* ---- image -> numbers ---- */
 /* light density f (share of lit pixels in a 4x32 px cell) -> loudness 0..1. Fixed scale: f=0.10 is full loudness (about the 99.5th percentile of 2023). */
@@ -38,7 +36,7 @@ function post(out,py,thr,extra){
       const w=out[(s2*BANDS+b2)*2];if(w>v||(w===v&&(a<0||(a===0&&c<0)))){top=false;break}}
     if(top)hubs.push({s,b,y:py[s*BANDS+b],a:v})}
   hubs.sort((p,q)=>q.a-p.a);hubs.length=Math.min(hubs.length,MAX_HUBS);
-  /* 3-step moving average (1-2-1 weights, about 4\u00b0 of longitude because 1 step = 360/256 = 1.4\u00b0) so the sound glides */
+  /* 3-step moving average (1-2-1 weights, about 4° of longitude because 1 step = 360/256 = 1.4°) so the sound glides */
   const sm=new Float32Array(out.length),W=BANDS*2;
   for(let s=0;s<STEPS;s++)for(let j=0;j<W;j++)sm[s*W+j]=.25*out[Math.max(0,s-1)*W+j]+.5*out[s*W+j]+.25*out[Math.min(STEPS-1,s+1)*W+j];
   sm.hubs=hubs;{let t=0,l=0;for(let i=0;i<sm.length;i+=2){t+=sm[i];if(sm[i]>0)l++}sm.level=t/(sm.length/2);sm.lit=l/(sm.length/2)}
@@ -51,7 +49,10 @@ function analyzeLights(img,d){
     for(let y=BAND_TOP+b*BAND_H;y<BAND_TOP+(b+1)*BAND_H;y++)for(let xx=s*COLW;xx<(s+1)*COLW;xx++){
       const i=(y*PW+xx)*4,v=Math.min(1,Math.max(0,(0.2126*px[i]+0.7152*px[i+1]+0.0722*px[i+2]-LUM_FLOOR)/LUM_SPAN));p+=v;if(v>bv){bv=v;by=y}}
     out[(s*BANDS+b)*2]=amp(p/cnt);py[s*BANDS+b]=by}
-  return post(out,py,HUB_AMP)}
+  const result=post(out,py,HUB_AMP);
+  /* Fixed 0–1 tone mapping keeps a year sonically consistent without loading every year up front. */
+  result.tone=result.level;
+  return result}
 /* Sea surface temperature: colour (hue) -> degrees C through the table built from NASA's own colour bar (tools/build_lut.py). Brightness is ignored for temperature. */
 function hueTable(l){const T=new Float32Array(421);for(let i=0;i<421;i++){const h=i-60; /* hue -60..360 deg */
   const hs=l.hue,ts=l.temp;let t=h>=hs[0]?ts[0]:h<=hs[hs.length-1]?ts[ts.length-1]:0;
@@ -73,7 +74,7 @@ function analyzeSST(img,d){
     temp[s*BANDS+b]=T;py[s*BANDS+b]=BAND_TOP+b*BAND_H+BAND_H/2}
   return post(out,py,HUB_SST,{temp,meanT:sT/sW})}
 
-/* Year tone: scale each year’s total light between the dimmest and brightest year (0..1). Drives filter brightness + a low drone. */
+/* Optional batch normalizer retained for callers that analyse a complete year set. */
 function normalize(data,keys){const v=keys.map(k=>data[k].level),lo=Math.min(...v),hi=Math.max(...v);keys.forEach((k,i)=>data[k].tone=hi>lo?(v[i]-lo)/(hi-lo):.5)}
 /* Change of year `a` versus year `b`: bank A = more light (rising glide), bank B = less light (falling glide). Differences are small, so they are boosted. */
 function diff(a,b){const o=new Float32Array(a.length),g=x=>x<.005?0:Math.pow(Math.min(1,x/DIFF_FULL),.6);

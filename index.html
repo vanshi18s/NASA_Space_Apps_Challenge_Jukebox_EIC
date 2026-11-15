@@ -3,149 +3,729 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Earth Jukebox · Hear NASA’s Earth data</title>
+<meta name="theme-color" content="#050817">
+<meta name="description" content="Explore NASA Earth visualizations and experience global patterns through sound with Frequency_vista.">
+<title>Frequency_Vista — Hear the Earth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#050812;--panel:rgba(15,22,42,.82);--line:#26325a;--text:#eaeef7;--mute:#a1abc2;--gold:#f2c14e;--more:#9c7bdb;--less:#e39b5f}
+:root{
+  color-scheme:dark;
+  --bg:#030609;
+  --panel:#080e17;
+  --line:rgba(0,190,255,.22);
+  --green:#b6ff00;
+  --blue:#00b7ff;
+  --yellow:#ffdb38;
+  --white:#f5f8ff;
+  --muted:#91a3b7;
+  --shadow:0 12px 40px rgba(0,0,0,.4);
+}
+
 *{box-sizing:border-box}
-body{margin:0;color:var(--text);font:400 17px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;min-height:100vh;
- background:
-  radial-gradient(1.2px 1.2px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 33% 72%,#cfd8ff 50%,transparent 51%),
-  radial-gradient(1.5px 1.5px at 58% 12%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 81% 40%,#ffe9b0 50%,transparent 51%),
-  radial-gradient(1.2px 1.2px at 92% 85%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 22% 90%,#fff 50%,transparent 51%),
-  radial-gradient(1px 1px at 70% 66%,#cfd8ff 50%,transparent 51%),radial-gradient(1px 1px at 45% 40%,#fff 50%,transparent 51%),
-  radial-gradient(ellipse 60% 40% at 85% 0%,rgba(110,70,200,.28),transparent 70%),
-  radial-gradient(ellipse 50% 40% at 0% 100%,rgba(30,90,160,.25),transparent 70%),var(--bg)}
-main{max-width:1120px;margin:0 auto;padding:20px 20px 36px}
-header{display:flex;align-items:center;gap:20px;margin-bottom:22px}
-.planet{flex:none;width:84px;height:84px;border-radius:50%;
- background:radial-gradient(circle at 32% 30%,#7fb4ff,#1d4b9c 45%,#071433 78%);box-shadow:0 0 28px rgba(90,150,255,.45),inset -10px -8px 18px rgba(0,0,0,.6);position:relative}
-.planet::after{content:"";position:absolute;inset:0;border-radius:50%;
- background:radial-gradient(1.5px 1.5px at 62% 55%,#ffd98a 60%,transparent 62%),radial-gradient(1.5px 1.5px at 40% 40%,#ffd98a 60%,transparent 62%),radial-gradient(1.5px 1.5px at 70% 35%,#ffd98a 60%,transparent 62%),radial-gradient(1.5px 1.5px at 30% 65%,#ffd98a 60%,transparent 62%)}
-h1{font:700 clamp(1.7rem,4.5vw,2.8rem)/1.1 Unbounded,"Atkinson Hyperlegible",sans-serif;margin:0;letter-spacing:.02em}
-.sub{color:var(--mute);margin:6px 0 0;max-width:58ch}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:22px;align-items:start}
-@media(max-width:860px){.layout{grid-template-columns:1fr}}
-.map{position:relative;background:#000;border:1px solid var(--line);border-radius:8px;overflow:hidden;max-width:640px}
-canvas{display:block;width:100%;height:auto}
-.map.two{max-width:520px}
-#fx{position:absolute;left:0;top:0;pointer-events:none}
-#cap2{position:absolute;left:12px;top:calc(50% + 8px);font:700 1rem Unbounded,sans-serif;text-shadow:0 2px 8px #000;display:none}
-#head{position:absolute;top:0;bottom:0;width:3px;background:var(--gold);box-shadow:0 0 12px var(--gold);display:none}
-#cap{position:absolute;left:12px;top:8px;font:700 1rem Unbounded,sans-serif;text-shadow:0 2px 8px #000}
-#key{position:absolute;right:10px;bottom:8px;display:none;align-items:center;gap:8px;font-size:.8rem;text-shadow:0 1px 4px #000}
-#key i{display:block;width:110px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--less),#fff,var(--more))}
-.how{margin-top:16px;max-width:640px}
-h2{font-size:1.05rem;margin:0 0 8px}
-dl{margin:0}dt{font-weight:700;margin-top:8px}dd{margin:0;color:var(--mute);font-size:.95rem}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;backdrop-filter:blur(6px)}
-label{display:flex;justify-content:space-between;font-weight:700;margin:12px 0 4px}
-label output{color:var(--gold)}
-select,input[type=range]{width:100%}
-select{font:inherit;color:var(--text);background:#141c38;border:1px solid var(--line);border-radius:6px;padding:10px;min-height:44px}
-input[type=range]{accent-color:var(--gold);height:30px}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:#030609;
+}
+
+body{
+  color:var(--white);
+  font:400 13px/1.5 "DM Sans",sans-serif;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(0,183,255,.15),transparent 34%),
+    radial-gradient(ellipse at 90% 5%,rgba(182,255,0,.08),transparent 30%),
+    radial-gradient(ellipse at 50% 100%,rgba(0,60,120,.15),transparent 45%),
+    #030609;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.3;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%,white 50%,transparent 55%),
+    radial-gradient(1px 1px at 40% 70%,#8bcfff 50%,transparent 55%),
+    radial-gradient(1px 1px at 80% 15%,white 50%,transparent 55%),
+    radial-gradient(1px 1px at 65% 85%,#b6ff00 50%,transparent 55%);
+  background-size:260px 230px,370px 320px,430px 350px,510px 410px;
+}
+
+main{
+  position:relative;
+  z-index:1;
+  width:min(1450px,100%);
+  margin:auto;
+  padding:17px 27px;
+}
+
+/* HEADER */
+
+.hero{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin:0 0 17px;
+}
+
+.planet-wrap{
+  width:58px;
+  height:58px;
+  flex:none;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+
+.planet{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%,#c0ffdc,#00a9da 35%,#10417d 70%,#020819);
+  box-shadow:
+    0 0 15px rgba(0,183,255,.65),
+    0 0 32px rgba(182,255,0,.12);
+}
+
+.planet::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:50%;
+  border:1px solid rgba(182,255,0,.65);
+}
+
+.orbit{
+  position:absolute;
+  width:67px;
+  height:24px;
+  border:1px solid rgba(0,183,255,.7);
+  border-radius:50%;
+  transform:rotate(-28deg);
+}
+
+.orbit::after{
+  content:"";
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--yellow);
+  top:2px;
+  left:9px;
+  box-shadow:0 0 9px var(--yellow);
+}
+
+.eyebrow,.section-kicker{
+  color:var(--green);
+  font:700 9px "Space Grotesk",sans-serif;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.eyebrow{margin:0 0 4px}
+
+h1{
+  font:700 clamp(25px,3vw,36px)/1 "Space Grotesk",sans-serif;
+  letter-spacing:-1.8px;
+  margin:0;
+  color:white;
+}
+
+h1 span{
+  background:linear-gradient(100deg,var(--green),var(--blue));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero-sub{
+  color:var(--muted);
+  font-size:11px;
+  margin:5px 0 0;
+}
+
+.hero-badge{
+  margin-left:auto;
+  border:1px solid var(--line);
+  background:rgba(0,183,255,.06);
+  color:var(--green);
+  border-radius:20px;
+  padding:7px 12px;
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.hero-badge span{
+  width:6px;height:6px;
+  display:inline-block;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+  margin-right:7px;
+}
+
+/* REMOVE UNNECESSARY CONTENT */
+
+.intro-strip,
+.insight-grid,
+.technical,
+.disc{
+  display:none!important;
+}
+
+/* MAIN TWO-COLUMN LAYOUT */
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 305px;
+  gap:17px;
+  align-items:start;
+}
+
+.visual-column{min-width:0}
+
+.section-kicker{
+  margin:0 0 8px 2px;
+  color:var(--blue);
+}
+
+/* VISUALIZATION */
+
+.map-card{
+  background:#02060b;
+  border:1px solid rgba(0,183,255,.3);
+  border-radius:12px;
+  overflow:hidden;
+  max-width: 800px; /* Makes the single window a little bit smaller */
+  margin: 0 auto;
+  box-shadow:
+    0 0 20px rgba(0,183,255,.07),
+    var(--shadow);
+}
+
+.map-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 14px;
+  gap:10px;
+  background:linear-gradient(90deg,#081523,#090d17);
+  border-bottom:1px solid rgba(0,183,255,.19);
+}
+
+.map-heading{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+
+.map-heading-mark{
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  background:rgba(182,255,0,.08);
+  color:var(--green);
+  border:1px solid rgba(182,255,0,.24);
+}
+
+.map-heading strong{
+  display:block;
+  font:600 12px "Space Grotesk",sans-serif;
+  color:white;
+}
+
+.map-heading small{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+}
+
+.map-status{
+  color:var(--green);
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.map-status::before{
+  content:"";
+  display:inline-block;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  margin-right:6px;
+}
+
+.map{
+  position:relative;
+  width:100%;
+  aspect-ratio: 16 / 9;
+  max-height: 55vh;
+  background:#010307;
+  overflow:hidden;
+}
+
+.map.compare {
+  aspect-ratio: 16 / 18; /* Stacked layout aspect ratio */
+  max-height: 75vh; /* Fits vertically on the screen */
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit: fill;
+}
+
+#fx{
+  position:absolute;
+  left:0;
+  top:0;
+  pointer-events:none;
+  z-index:2;
+}
+
+#head{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:var(--yellow);
+  box-shadow:0 0 9px 2px var(--yellow);
+  display:none;
+  z-index:3;
+  pointer-events:none;
+}
+
+#cap,#cap2{
+  position:absolute;
+  top:10px;
+  z-index:4;
+  font:700 10px "Space Grotesk",sans-serif;
+  color:white;
+  text-shadow:0 2px 8px black;
+  background:rgba(0,0,0,.65);
+  padding:5px 9px;
+  border-radius:5px;
+  letter-spacing:.06em;
+}
+
+#cap{left:10px}
+#cap2{left:10px; top:calc(50% + 10px); display:none}
+
+/* COMPARISON DIVIDER (Vertical Layout) */
+
+.map.compare::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:0;
+  right:0;
+  height:1px;
+  background:var(--blue);
+  box-shadow:0 0 8px rgba(0,183,255,.6);
+  pointer-events:none;
+  z-index:2;
+}
+
+/* LOADING */
+
+.map-loading{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  background:rgba(2,6,13,.96);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:9px;
+}
+
+.map-loading.hidden{display:none}
+
+.loader-orbit{
+  width:34px;
+  height:34px;
+  border:2px solid rgba(0,183,255,.2);
+  border-top-color:var(--green);
+  border-right-color:var(--blue);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#loading-text{
+  color:var(--green);
+  font:600 11px "Space Grotesk",sans-serif;
+}
+
+#loading-sub{
+  color:var(--muted);
+  font-size:10px;
+}
+
+/* MAP FOOTER */
+
+.map-foot{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 12px;
+  border-top:1px solid rgba(0,183,255,.17);
+  background:#070d16;
+  color:#91a3b7;
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.map-foot span{display:flex;align-items:center;gap:6px}
+
+.map-foot i{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 7px var(--green);
+}
+
+/* CONTROL PANEL */
+
+.panel{
+  position:relative;
+  border:1px solid rgba(0,183,255,.3);
+  border-radius:12px;
+  padding:17px;
+  background:linear-gradient(155deg,#0b1522,#070c15);
+  box-shadow:0 0 25px rgba(0,183,255,.07);
+}
+
+.panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:12px;
+  margin-bottom:15px;
+  border-bottom:1px solid rgba(0,183,255,.2);
+}
+
+.panel-head h2{
+  font:600 16px "Space Grotesk",sans-serif;
+  margin:0;
+  color:white;
+}
+
+.deck-tag{
+  color:var(--green);
+  font-size:8px;
+  letter-spacing:.12em;
+  border:1px solid rgba(182,255,0,.25);
+  background:rgba(182,255,0,.06);
+  padding:5px 8px;
+  border-radius:5px;
+}
+
+.control-group{margin-bottom:13px}
+
+label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+  color:#eaf1ff;
+  font:600 10px "Space Grotesk",sans-serif;
+}
+
+label output{
+  color:var(--yellow);
+  font:600 11px "DM Sans",sans-serif;
+}
+
+select{
+  width:100%;
+  height:39px;
+  padding:0 12px;
+  border:1px solid rgba(0,183,255,.32);
+  border-radius:7px;
+  background:#060c15;
+  color:white;
+  font-size:11px;
+  cursor:pointer;
+}
+
+select:focus{
+  border-color:var(--green);
+  outline:none;
+  box-shadow:0 0 8px rgba(182,255,0,.13);
+}
+
+select option{
+  background:#080e17;
+  color:white;
+}
+
+input[type=range]{
+  width:100%;
+  height:19px;
+  margin:0;
+  accent-color:var(--green);
+  cursor:pointer;
+}
+
+input[type=range]::-webkit-slider-runnable-track{
+  height:3px;
+  background:linear-gradient(90deg,var(--green),var(--blue));
+  border-radius:5px;
+}
+
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:13px;height:13px;
+  margin-top:-5px;
+  border:2px solid var(--green);
+  border-radius:50%;
+  background:#06101a;
+  box-shadow:0 0 9px var(--green);
+}
+
+.range-hints{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:9px;
+}
+
 input:disabled{opacity:.4}
-button{font:inherit;color:var(--text);background:#1a2340;border:1px solid var(--line);border-radius:6px;min-height:44px;cursor:pointer;width:100%}
-button:hover:not(:disabled){background:#243058}
-#play{background:var(--gold);color:#1a1405;font-weight:700;border:0;margin-top:16px}
-#play:disabled{opacity:.5;cursor:not-allowed}
-#home{margin-top:8px}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-#status{min-height:3em;color:var(--gold);margin:12px 0 0;font-size:.95rem}
-.keys{color:var(--mute);font-size:.85rem;margin:8px 0 0}
-kbd{background:#1a2340;border:1px solid var(--line);border-radius:4px;padding:0 5px}
-.disc{margin-top:28px;border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:rgba(10,15,30,.7);color:var(--mute);font-size:.88rem;max-width:100ch}
-.disc h2{color:var(--text)}.disc p{margin:6px 0}
-a{color:var(--gold)}
-.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.82rem}caption{text-align:left;font-weight:700;margin-bottom:6px}
-th,td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}th{background:#141c38}
+
+/* DATASET DESCRIPTION */
+
+.dataset-note{
+  padding:9px 10px;
+  margin:-4px 0 14px;
+  border-left:2px solid var(--green);
+  border-radius:0 5px 5px 0;
+  background:rgba(182,255,0,.045);
+  color:#a9bacb;
+  font-size:10px;
+  line-height:1.5;
+}
+
+/* BUTTONS */
+
+.action-row{
+  display:grid;
+  grid-template-columns:1fr 42px;
+  gap:8px;
+  margin-top:18px;
+}
+
+button{
+  min-height:43px;
+  border-radius:7px;
+  cursor:pointer;
+  font:700 11px "Space Grotesk",sans-serif;
+  transition:.2s ease;
+}
+
+#play{
+  color:#061008;
+  border:1px solid var(--green);
+  background:var(--green);
+  box-shadow:0 0 13px rgba(182,255,0,.18);
+}
+
+#play:hover:not(:disabled){
+  background:#d0ff52;
+  box-shadow:0 0 20px rgba(182,255,0,.35);
+}
+
+#play:disabled{opacity:.45;cursor:wait}
+
+#home{
+  width:42px;
+  color:var(--blue);
+  background:#071421;
+  border:1px solid rgba(0,183,255,.4);
+  font-size:18px;
+}
+
+#home:hover{
+  background:rgba(0,183,255,.13);
+  box-shadow:0 0 12px rgba(0,183,255,.2);
+}
+
+#status{
+  min-height:32px;
+  margin:10px 0 0;
+  color:var(--yellow);
+  font-size:10px;
+  line-height:1.5;
+}
+
+.keys{
+  padding-top:10px;
+  margin:7px 0 0;
+  border-top:1px solid rgba(0,183,255,.16);
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.8;
+}
+
+kbd{
+  padding:2px 5px;
+  border:1px solid rgba(0,183,255,.3);
+  border-radius:4px;
+  color:var(--green);
+  background:#060c15;
+  font-size:9px;
+}
+
+/* DISCLAIMER FOOTER */
+.team-disclaimer {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,183,255,.2);
+  color: var(--muted);
+  font: 500 11px "Space Grotesk",sans-serif;
+  letter-spacing: .05em;
+}
+.team-disclaimer p {
+  margin: 0;
+}
+
+/* RESPONSIVE LAPTOP LAYOUT */
+
+@media(min-width:900px){
+  body{overflow-y:auto}
+  main{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+}
+
+/* MOBILE */
+
+@media(max-width:899px){
+  body{overflow-y:auto}
+  main{height:auto;min-height:100vh;padding:15px}
+  .hero{margin-bottom:15px}
+  .hero-badge{display:none}
+  .layout{grid-template-columns:1fr}
+  .panel{grid-row:1}
+  .visual-column{grid-row:2}
+}
+
+@media(max-width:520px){
+  .planet-wrap{width:48px;height:48px}
+  .planet{width:36px;height:36px}
+  .orbit{width:55px;height:20px}
+  h1{font-size:26px}
+  .hero-sub{font-size:10px}
+  .map-foot{font-size:8px;padding:8px}
+  .map-heading strong{font-size:10px}
+  .map-heading small{font-size:8px}
+}
 </style>
 </head>
 <body>
 <main>
-<header>
-  <div class="planet" aria-hidden="true"></div>
-  <div><h1>Earth Jukebox</h1><p class="sub">NASA’s Earth data was made to be seen. Choose a dataset and hear how our planet is changing.</p></div>
-</header>
-
-<div class="layout">
-  <div>
-    <div class="map" id="map" role="img" aria-label="Flat world map from NASA. A gold line sweeps left to right while the sound plays.">
-      <canvas id="cv" width="1024" height="576"></canvas><canvas id="fx" width="1024" height="576"></canvas><div id="head"></div><div id="cap"></div><div id="cap2"></div>
+  <header class="hero">
+    <div class="planet-wrap" aria-hidden="true"><div class="planet"></div><div class="orbit"></div></div>
+    <div class="hero-copy">
+      <p class="eyebrow">NASA EARTH OBSERVATIONS · SONIFIED</p>
+      <h1>Frequency_<span>vista</span></h1>
+      <p class="hero-sub">The Earth information jukebox that turns the visuals into sonification.</p>
     </div>
-    <section class="how" aria-labelledby="mt">
-      <h2 id="mt">How the sound is made</h2>
-      <dl>
-        <dt>Latitude → pitch</dt><dd>12 bands from 70°N to 50°S in an A minor pentatonic scale. North is high, south is low.</dd>
-        <dt>Light → loudness</dt><dd>Denser, brighter lights are louder, on one fixed scale for every year. Gray land is ignored. On the map, the glow beside the gold bar shows the loudness of each latitude band.</dd>
-        <dt>Bright hubs</dt><dd>The brightest clusters ring like a bell when the scan reaches them and stay marked on the map. A brighter hub rings louder, and its pitch follows latitude.</dd>
-        <dt>Longitude → time and stereo</dt><dd>The scan moves west to east and the sound moves from the left ear to the right.</dd>
-        <dt>Compare 2012 with another year</dt><dd>Pick any year from 2013 to 2023. 2012 is shown above that year, and 2012 is scanned first, then the chosen year. One soft blip marks 2012 and two blips mark the chosen year. 2012 can never be compared with itself.</dd>
-        <dt>Year tone</dt><dd>Each year’s total light sets how bright the sound is. Years are scaled between the dimmest and brightest of 2012–2023, so 2012 sounds dull and soft and 2023 bright and full.</dd>
-        <dt>Intensity</dt><dd>Master volume only: Soft (−10 dB), Medium (−4 dB) or Full (0 dB). It never changes the data mapping, so the sound is the same shape, just quieter or louder.</dd>
-        <dt>Stop and resume</dt><dd>Stop pauses the scan. Play then says Resume and continues from the same spot. Changing mode, dataset or year, or pressing Home, starts over.</dd>
-        <dt>Year label</dt><dd>The year printed in NASA’s video is never analysed. It sits outside the map area we read, and that spot is also masked.</dd>
-      </dl>
+    <div class="hero-badge"><span></span> Explore · Listen · Discover</div>
+  </header>
+
+  <div class="layout">
+    <section class="visual-column" aria-label="Earth data visualization">
+      <p class="section-kicker">01 / The visualization</p>
+      <div class="map-card">
+        <div class="map-card-head">
+          <div class="map-heading">
+            <div class="map-heading-mark" aria-hidden="true">✧</div>
+            <div><strong id="map-title">Night Lights · Earth at night</strong><small id="map-subtitle">NASA Black Marble / Suomi NPP VIIRS</small></div>
+          </div>
+          <div class="map-status">Data view</div>
+        </div>
+        <div class="map" id="map" role="img" aria-label="NASA world map view.">
+          <canvas id="cv" width="1024" height="576"></canvas>
+          <canvas id="fx" width="1024" height="576"></canvas>
+          <div id="head"></div><div id="cap"></div><div id="cap2"></div>
+          <div class="map-loading" id="map-loading">
+            <div class="loader-orbit" aria-hidden="true"></div>
+            <div id="loading-text">Preparing your view of Earth</div>
+            <div id="loading-sub">Loading only the selected NASA frame</div>
+          </div>
+        </div>
+        <div class="map-foot"><span><i></i> West → East scan</span><span>12 latitude bands</span><span>256 sonic steps</span></div>
+      </div>
     </section>
-    <section class="how" aria-labelledby="tt">
-      <h2 id="tt">Mapping table: what is data and what is artistic</h2>
-      <div class="tw"><table>
-        <caption>Every sound parameter, what controls it, and whether the rule is data or a design choice</caption>
-        <thead><tr><th scope="col">Sound</th><th scope="col">Controlled by</th><th scope="col">Exact rule</th><th scope="col">Data or artistic</th></tr></thead>
-        <tbody>
-        <tr><th scope="row">Pitch</th><td>Latitude</td><td>12 bands of 10° (70°N to 50°S). Band 1 is the lowest note, A2 = 110 Hz. Band 12 is the highest, C5 = 523 Hz. Higher north means higher pitch.</td><td>Data: which band. Artistic: the A minor pentatonic notes. Pitch order is true, but steps are not equal in degrees.</td></tr>
-        <tr><th scope="row">Loudness</th><td>Light density in the band</td><td>Share of lit pixels, brightness weighted, in a cell of 4×32 px. Volume = (density ÷ 0.10, capped at 1) to the power 0.6. Anything under 0.15 is treated as dark and is completely silent; the rest is stretched back to 0 to 1. Same scale in every year.</td><td>Data: density. Artistic: the 0.6 curve and the 0.15 dark gate, chosen so faint specks do not hiss.</td></tr>
-        <tr><th scope="row">Time</th><td>Longitude</td><td>Scan west to east, 256 steps of 1.4°. Whole scan lasts 16 s ÷ speed.</td><td>Data</td></tr>
-        <tr><th scope="row">Left to right position</th><td>Longitude</td><td>Pan moves linearly from −0.85 (left) to +0.85 (right).</td><td>Data</td></tr>
-        <tr><th scope="row">Bell</th><td>Bright hubs</td><td>A hub is a local loudness peak (7 steps × 3 bands) at 0.45 or above, top 48 per frame. It rings one octave above its band note, louder when brighter.</td><td>Data: place and brightness. Artistic: bell timbre and the 0.45 threshold.</td></tr>
-        <tr><th scope="row">Soft low pad</th><td>Same as loudness</td><td>A quiet sine one octave below each note at 0.35 of its volume.</td><td>Artistic only. It carries no extra data.</td></tr>
-        <tr><th scope="row">Bright or dull tone</th><td>Year’s total light</td><td>Mean loudness of the whole map, scaled between the dimmest and brightest year. Filter 1800 to 7000 Hz, only while light is sounding. Dark areas stay silent.</td><td>Data: direction. Artistic: the stretch. Real differences are small, so this is exaggerated on purpose. The true numbers are read out when you change year.</td></tr>
-        <tr><th scope="row">Blips before a scan</th><td>Compare mode</td><td>One blip = 2012, two blips = the chosen year.</td><td>Artistic cue</td></tr>
-        <tr><th scope="row">Intensity</th><td>Your choice</td><td>Master volume: Soft −10 dB, Medium −4 dB, Full 0 dB.</td><td>Not data</td></tr>
-        </tbody></table></div>
-    </section>
-    <section class="how" aria-labelledby="ot">
-      <h2 id="ot">Mapping table: Global Sea Surface Currents and Temperature</h2>
-      <div class="tw"><table>
-        <caption>Same layout as night lights. Pitch, time and left-right position work exactly the same way.</caption>
-        <thead><tr><th scope="col">Sound</th><th scope="col">Controlled by</th><th scope="col">Exact rule</th><th scope="col">Data or artistic</th></tr></thead>
-        <tbody>
-        <tr><th scope="row">Pitch, time, left to right</th><td>Latitude and longitude</td><td>Identical to the night lights table above.</td><td>Data, with the same artistic scale</td></tr>
-        <tr><th scope="row">Loudness</th><td>Water temperature</td><td>Colour of each pixel is turned into degrees Celsius with a table read from NASA’s own colour bar (0 to 32 °C). Volume = temperature ÷ 32, times min(1, coverage ÷ 0.30). Cells with under 10% coloured pixels (land, ice, black) are silent.</td><td>Data: temperature. Artistic: straight-line volume scale and the coverage rule.</td></tr>
-        <tr><th scope="row">Brightness of the tone</th><td>Water temperature</td><td>Low-pass filter at 500 Hz × 2 to the power (temperature ÷ 8): 500 Hz at 0 °C, 8000 Hz at 32 °C. Warmer sounds brighter.</td><td>Data: temperature. Artistic: the frequency range.</td></tr>
-        <tr><th scope="row">Bell</th><td>Warm pools</td><td>A local loudness peak of 0.85 or more (about 27 °C or warmer with full coverage) rings one octave above its note.</td><td>Data: place and warmth. Artistic: bell sound and threshold.</td></tr>
-        <tr><th scope="row">Currents</th><td>Not sonified</td><td>The flow lines are drawn in the picture, but speed and direction cannot be measured from a still frame. Only temperature is heard.</td><td>Stated limitation</td></tr>
-        <tr><th scope="row">Spoken mean temperature</th><td>All coloured pixels, 50°S to 70°N</td><td>Average of decoded temperatures, weighted by cosine of latitude so polar bands do not count too much. Read the change between dates, not the absolute value: streak brightness and the picture’s colours bias it.</td><td>Data, approximate</td></tr>
-        </tbody></table></div>
-    </section>
+
+    <aside class="panel" aria-label="Sonification controls">
+      <div class="panel-head"><h2>Listening controls</h2><span class="deck-tag">Control deck</span></div>
+
+      <div class="control-group">
+        <label for="ds">Choose a data story</label>
+        <select id="ds" aria-label="Choose a NASA dataset"></select>
+      </div>
+      <p class="dataset-note" id="dataset-note">City lights seen from orbit, using NASA Black Marble imagery from Suomi NPP VIIRS.</p>
+
+      <div class="control-group">
+        <label for="mode">Explore mode</label>
+        <select id="mode"></select>
+      </div>
+
+      <div class="control-group">
+        <label for="year"><span id="yl">Year</span><output id="yo">2023</output></label>
+        <input id="year" type="range" min="0" max="11" step="1" value="11">
+        <div class="range-hints"><span id="range-start">2012</span><span id="range-end">2023</span></div>
+      </div>
+
+      <div class="control-group">
+        <label for="speed">Playback speed <output id="so">1×</output></label>
+        <input id="speed" type="range" min="0" max="3" step="1" value="1">
+        <div class="range-hints"><span>Slow</span><span>Fast</span></div>
+      </div>
+
+      <div class="control-group">
+        <label for="inten">Sound intensity <output id="io">Medium</output></label>
+        <input id="inten" type="range" min="0" max="2" step="1" value="1">
+        <div class="range-hints"><span>Soft</span><span>Full</span></div>
+      </div>
+
+      <div class="action-row">
+        <button id="play" disabled>Loading NASA data…</button>
+        <button id="home" type="button" aria-label="Stop and reset playback" title="Stop and reset playback">↺</button>
+      </div>
+      <p id="status" role="status" aria-live="polite">Preparing the selected data frame.</p>
+      <p class="keys"><kbd>Space</kbd> Play / Stop &nbsp; <kbd>H</kbd> Reset &nbsp; <kbd>I</kbd> Read current settings.<br>Changing the year or dataset resets the current scan.</p>
+    </aside>
   </div>
 
-  <aside class="panel" aria-label="Controls">
-    <label for="ds">Dataset</label>
-    <select id="ds"></select>
-    <label for="mode">Mode</label>
-    <select id="mode"></select>
-    <label for="year"><span id="yl">Year</span> <output id="yo"></output></label>
-    <input id="year" type="range" min="0" max="11" step="1" value="11">
-    <label for="speed">Speed <output id="so"></output></label>
-    <input id="speed" type="range" min="0" max="3" step="1" value="1">
-    <label for="inten">Intensity <output id="io"></output></label>
-    <input id="inten" type="range" min="0" max="2" step="1" value="1">
-    <button id="play" disabled>Loading data…</button>
-    <button id="home">Home: stop and reset</button>
-    <p id="status" role="status" aria-live="polite"></p>
-    <p class="keys"><kbd>Space</kbd> play or stop · <kbd>H</kbd> home · <kbd>I</kbd> current settings. Sliders move in steps with a rising tick, and a low thud marks each end.</p>
-  </aside>
-</div>
-
-<section class="disc" aria-labelledby="dt">
-  <h2 id="dt">Disclaimer</h2>
-  <p>Earth Jukebox is an independent project made for the NASA International Space Apps Challenge. NASA does not endorse this project or any non-U.S. Government entity and is not responsible for the content of non-U.S. Government websites.</p>
-  <p>Imagery comes from NASA’s Scientific Visualization Studio (SVS), including “Change in Night Lights between 2012 and 2023 – EIC Version” (<a href="https://svs.gsfc.nasa.gov/5313/">SVS 5313</a>), based on NASA Black Marble data from Suomi NPP VIIRS. We turn NASA’s published visualizations into sound. The frames are display-stretched pictures, not calibrated measurements, so the sound shows patterns and direction of change, not exact values. Choices such as the musical scale and instrument tones are artistic; what is loud, high or rising comes from the data. Do not use it for scientific analysis or safety decisions.</p>
-  <p>Sea-surface data: “Global Sea Surface Currents and Temperature” (<a href="https://svs.gsfc.nasa.gov/3912/">SVS 3912</a>), NASA/Goddard Space Flight Center Scientific Visualization Studio. It shows model output from ECCO2 (MIT/JPL) from 25 March 2007 to 3 March 2008: colours are sea surface temperature and flow lines are surface currents. Animators: Greg Shirah, Horace Mitchell and Eric Sokolowsky. Producer: Michael Starobin. Scientists: Hong Zhang (UCLA) and Dimitris Menemenlis (NASA JPL/Caltech). Temperatures here are read back from the colour bar of the picture, so they are approximate and not model values.</p>
-  <p>All sound is synthesized live in your browser with the Web Audio API; no recordings are used. Font: Atkinson Hyperlegible (Braille Institute) and Unbounded, under the SIL Open Font License. This code was written with assistance from Claude (Anthropic).</p>
-</section>
+  <footer class="team-disclaimer">
+    <p>NASA Space App Challenge 2026 | Team Phoenix Flames</p>
+  </footer>
 </main>
 
 <script src="js/sonify.js"></script>
@@ -153,87 +733,356 @@ th,td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:to
 "use strict";
 const SN=Sonify,$=id=>document.getElementById(id),cv=$("cv"),c2=cv.getContext("2d"),head=$("head"),fx=$("fx").getContext("2d");
 const SPEEDS=[0.5,1,1.5,2],INTENS=[0.3,0.6,1],INAMES=["Soft","Medium","Full"];
-const ST={};let imgs={},data={},ds=0,playing=false,info=null,paused=null,shown="",ready=false,raf=0;
+const ST=Object.create(null);
+let imgs={},data={},ds=0,playing=false,playPending=false,info=null,paused=null,shown="",ready=false,raf=0;
+let bootSequence=0,refreshSequence=0,playSequence=0,refreshTimer=0;
 
-const D=()=>SN.DATASETS[ds],F=()=>D().frames||[],fk=i=>(F()[i]||{k:""}).k,yi=()=>Math.min(+$("year").value,Math.max(0,F().length-1)),ylab=()=>(F()[yi()]||{label:""}).label,lab=k=>(F().find(f=>f.k===k)||{label:k}).label;
-function useStore(){const s=ST[ds]||(ST[ds]={imgs:{},data:{}});imgs=s.imgs;data=s.data}
-function say(m){const s=$("status");s.textContent="";setTimeout(()=>s.textContent=m,30)}
-SN.DATASETS.forEach((d,i)=>{const o=document.createElement("option");o.value=i;o.textContent=d.name+(d.ready?"":" (frames not added yet)");$("ds").appendChild(o)});
-function fillModes(){const m=$("mode");m.innerHTML="";(SN.DATASETS[ds].modes||["Not available yet"]).forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t;m.appendChild(o)})}
-const keys=()=>{const m=+$("mode").value;return m===1?[fk(0),fk(yi())]:[fk(yi())]};
-const sig=()=>ds+":"+keys().join(),clearPause=()=>{paused=null;if(ready)$("play").textContent="Play"};
-const vk=()=>+$("mode").value===1?"cmp|"+fk(yi()):keys()[0];
-function labels(){const n=F().length||1,cm=+$("mode").value===1;$("year").max=n-1;$("year").min=cm?1:0;
-  if(+$("year").value<+$("year").min)$("year").value=$("year").min;if(+$("year").value>n-1)$("year").value=n-1; /* the first date can never be compared with itself */
-  $("yo").textContent=ylab();$("so").textContent=SPEEDS[+$("speed").value]+"×";$("io").textContent=INAMES[+$("inten").value];
-  $("year").disabled=!D().ready;$("yl").textContent=cm?"Compare "+((F()[0]||{}).label||"")+" with":(D().unit||"Year");$("year").setAttribute("aria-valuetext",ylab())}
-const facts=i=>{const f=F()[i],b=F()[0],d=f&&data[f.k],o=b&&data[b.k];if(!d||!o)return"";
-  if(D().kind==="sst"){const dt=d.meanT-o.meanT;return ". Mean sea surface temperature, 50 south to 70 north, about "+d.meanT.toFixed(1)+" degrees Celsius"+(i?", "+(dt>=0?"plus ":"minus ")+Math.abs(dt).toFixed(1)+" versus "+b.label:"")+". "+(d.lit*100).toFixed(0)+" percent of map cells sounding."}
-  return ". Light index "+d.level.toFixed(3)+(i?", "+(d.level>=o.level?"plus ":"minus ")+Math.abs((d.level/o.level-1)*100).toFixed(1)+" percent versus "+b.label:"")+". "+(d.lit*100).toFixed(1)+" percent of map cells lit."};
-const hc=k=>data[k]&&data[k].hubs.length?" · "+data[k].hubs.length+" "+(D().hubLabel||"hubs"):"";
-function show(k){
-  const two=k.slice(0,4)==="cmp|",y2=k.slice(4),ik=k,k0=fk(0);if(shown===k||(two?!(imgs[k0]&&imgs[y2]):!imgs[ik]))return;shown=k;
-  cv.height=$("fx").height=two?1152:576;$("map").classList.toggle("two",two);
-  const draw=(im,y)=>{const c=D().crop,w=im.naturalWidth,h=im.naturalHeight;c2.drawImage(im,c[0]*w,c[1]*h,c[2]*w,c[3]*h,0,y,1024,576)};
-  if(two){draw(imgs[k0],0);draw(imgs[y2],576)}else draw(imgs[ik],0);
-  $("cap").textContent=lab(two?k0:k)+hc(two?k0:k);$("cap2").textContent=lab(y2)+hc(y2);$("cap2").style.display=two?"block":"none";
+const D=()=>SN.DATASETS[ds],F=()=>D().frames||[],fk=i=>(F()[i]||{k:""}).k;
+const yi=()=>Math.min(+$('year').value,Math.max(0,F().length-1));
+const ylab=()=>(F()[yi()]||{label:""}).label;
+const lab=k=>(F().find(f=>f.k===k)||{label:k}).label;
+function useStore(){const s=ST[ds]||(ST[ds]={imgs:{},data:{},pending:{}});imgs=s.imgs;data=s.data}
+function say(message){$("status").textContent=message}
+function setMapLoading(on,title,sub){
+  const overlay=$("map-loading");
+  overlay.classList.toggle("hidden",!on);
+  if(title)$("loading-text").textContent=title;
+  if(sub)$("loading-sub").textContent=sub;
 }
-const load=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(src);i.src=src});
+function setDatasetCopy(){
+  const ocean=D().kind==="sst";
+  $("map-title").textContent=ocean?"Global Ocean · Sea surface currents":"Night Lights · Earth at night";
+  $("map-subtitle").textContent=ocean?"NASA ECCO2 model visualization / SVS 3912":"NASA Black Marble / Suomi NPP VIIRS";
+  $("dataset-note").textContent=ocean
+    ?"Explore global sea-surface temperature patterns. The visible current-flow lines are not sonified in this version."
+    :"Explore city lights seen from orbit, using NASA Black Marble imagery from Suomi NPP VIIRS.";
+}
+SN.DATASETS.forEach((dataset,index)=>{
+  const option=document.createElement("option");option.value=index;option.textContent=dataset.kind==="sst"?"Global Sea Surface Currents":"Night Lights";$("ds").appendChild(option);
+});
+function fillModes(){
+  const select=$("mode");select.innerHTML="";
+  (D().modes||[]).forEach((name,index)=>{const option=document.createElement("option");option.value=index;option.textContent=name;select.appendChild(option)});
+}
+const keys=()=>{const selected=fk(yi());return +$("mode").value===1?[fk(0),selected]:[selected]};
+const sig=()=>ds+":"+keys().join(",");
+function clearPause(){paused=null;if(ready)$("play").textContent="▶  Play sonification"}
+const vk=()=>+$('mode').value===1?"cmp|"+fk(yi()):keys()[0];
+function labels(){
+  const frames=F(),count=frames.length||1,compare=+$('mode').value===1;
+  const min=compare?1:0,max=Math.max(0,count-1);
+  $('year').min=min;$('year').max=max;
+  if(+$('year').value<min)$('year').value=min;
+  if(+$('year').value>max)$('year').value=max;
+  $('yo').textContent=ylab();$('so').textContent=SPEEDS[+$('speed').value]+"×";$('io').textContent=INAMES[+$('inten').value];
+  $('year').disabled=!D().ready||!frames.length;
+  $('yl').textContent=compare?"Compare "+((frames[0]||{}).label||"first date")+" with":(D().unit||"Year");
+
+  $('year').setAttribute("aria-valuetext",ylab());
+  $('range-start').textContent=frames[0]?.label||"—";
+  $('range-end').textContent=frames[frames.length-1]?.label||"—";
+}
+function facts(index){
+  const frame=F()[index],base=F()[0],current=frame&&data[frame.k],baseline=base&&data[base.k];
+  if(!current)return "";
+  if(D().kind==="sst"){
+    const difference=baseline&&index?current.meanT-baseline.meanT:null;
+    return ". Approximate mean sea-surface temperature, 50°S to 70°N: "+current.meanT.toFixed(1)+"°C"+
+      (difference===null?"":" ("+(difference>=0?"+":"−")+Math.abs(difference).toFixed(1)+"°C versus "+base.label+")")+
+      ". "+(current.lit*100).toFixed(0)+"% of map cells sounding.";
+  }
+  return ". Light index "+current.level.toFixed(3)+". "+(current.lit*100).toFixed(1)+"% of map cells lit.";
+}
+const hc=key=>data[key]&&data[key].hubs.length?" · "+data[key].hubs.length+" "+(D().hubLabel||"hubs"):"";
+
+function show(key){
+  const two=key.slice(0,4)==="cmp|";
+  const second=key.slice(4);
+  const first=fk(0);
+
+  if(two?!(imgs[first]&&imgs[second]):!imgs[key])return false;
+
+  if(shown===key){
+    setMapLoading(false);
+    return true;
+  }
+
+  shown=key;
+
+  const canvasWidth=1024;
+  const canvasHeight=two?1152:576; // Stacked vertically
+
+  cv.width=canvasWidth;
+  cv.height=canvasHeight;
+
+  $("fx").width=canvasWidth;
+  $("fx").height=canvasHeight;
+
+  $("map").classList.toggle("compare",two);
+
+  const drawImage=(image,x,y)=>{
+    const crop=D().crop;
+    const w=image.naturalWidth;
+    const h=image.naturalHeight;
+
+    c2.drawImage(
+      image,
+      crop[0]*w,
+      crop[1]*h,
+      crop[2]*w,
+      crop[3]*h,
+      x,
+      y,
+      1024,
+      576
+    );
+  };
+
+  if(two){
+    drawImage(imgs[first],0,0);
+    drawImage(imgs[second],0,576); // Draw the second view directly beneath
+  }else{
+    drawImage(imgs[key],0,0);
+  }
+
+  $("cap").textContent=lab(two?first:key)+hc(two?first:key);
+
+  $("cap2").textContent=lab(second)+hc(second);
+  $("cap2").style.display=two?"block":"none";
+
+  setMapLoading(false);
+
+  return true;
+}
+
+const load=source=>new Promise((resolve,reject)=>{
+  const image=new Image();image.decoding="async";
+  image.onload=()=>resolve(image);image.onerror=()=>reject(new Error("Could not load frame: "+source));image.src=source;
+});
+async function ensureFrame(key){
+  const dataset=D(),store=ST[ds]||(ST[ds]={imgs:{},data:{},pending:{}});
+  if(store.data[key])return store.data[key];
+  if(store.pending[key])return store.pending[key];
+  const frame=dataset.frames.find(item=>item.k===key);
+  if(!frame)throw new Error("The selected frame is not listed in the dataset configuration.");
+  const task=(async()=>{
+    const image=store.imgs[key]||await load(dataset.folder+frame.file);
+    if(image.decode){try{await image.decode()}catch(error){}}
+    store.imgs[key]=image;
+    await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+    const result=SN.analyze(image,dataset);
+    store.data[key]=result;
+    return result;
+  })();
+  store.pending[key]=task;
+  try{return await task}finally{delete store.pending[key]}
+}
+async function ensureKeys(selectedKeys){await Promise.all([...new Set(selectedKeys)].map(ensureFrame))}
 async function boot(){
-  const d=SN.DATASETS[ds];ready=false;$("play").disabled=true;
-  if(!d.ready){$("play").textContent="Data not added yet";say(d.name+": frames and sonification rules are coming soon.");return}
-  $("play").textContent="Loading data…";
+  const ticket=++bootSequence;stop(true);ready=false;shown="";
+  $("play").disabled=true;$("play").textContent="Loading NASA data…";
+  setMapLoading(true,"Preparing your view of Earth","Loading the selected NASA frame only");
+  setDatasetCopy();
   try{
-    if(d.config&&!d.frames){const c=await (await fetch(d.config)).json();d.frames=c.frames;d.crop=c.crop}
-    if(d.kind==="sst"&&!d.lutData)d.lutData=await (await fetch(d.lutFile)).json();
+    const dataset=D();
+    if(dataset.config&&!dataset.frames){
+      const response=await fetch(dataset.config);if(!response.ok)throw new Error("Could not read "+dataset.config);
+      const config=await response.json();dataset.frames=config.frames;dataset.crop=config.crop;
+    }
+    if(ticket!==bootSequence)return;
+    if(dataset.kind==="sst"&&!dataset.lutData){
+      const response=await fetch(dataset.lutFile);if(!response.ok)throw new Error("Could not read "+dataset.lutFile);
+      dataset.lutData=await response.json();
+    }
+    if(ticket!==bootSequence)return;
     useStore();labels();
-    for(const f of d.frames){if(!imgs[f.k]){imgs[f.k]=await load(d.folder+f.file);data[f.k]=SN.analyze(imgs[f.k],d)}}
-    if(d.kind==="lights")SN.normalize(data,d.frames.map(f=>f.k));
-    ready=true;$("play").disabled=false;$("play").textContent="Play";show(vk());say("Ready. Press Space to play.");
-  }catch(e){$("play").textContent="Could not load data";say("Could not load "+e+". Open this page with Live Server from the repository root.")}
+    await ensureKeys(keys());
+    if(ticket!==bootSequence)return;
+    ready=true;$("play").disabled=false;$("play").textContent="▶  Play sonification";
+    show(vk());say("Ready. Select Play sonification to hear this data frame."+(facts(yi())));
+  }catch(error){
+    if(ticket!==bootSequence)return;
+    ready=false;$("play").disabled=true;$("play").textContent="Data could not load";
+    setMapLoading(true,"We couldn’t load this view",error.message+" · Open the project from its repository root using a local server.");
+    say("Could not load the selected data. Check that the data folders and JSON files are present.");
+  }
 }
-function play(){
-  if(!ready)return;SN.ensure(INTENS[+$("inten").value]);
-  const from=paused&&paused.sig===sig()?paused.i:0;paused=null;stop(true);
-  info=SN.play(keys(),data,16/SPEEDS[+$("speed").value],from);playing=true;head.style.display="block";$("play").textContent="Stop";say((from?"Resuming":"Playing")+facts(yi()));raf=requestAnimationFrame(vis);
+async function play(){
+  if(!D().ready||playPending)return;
+  const ticket=++playSequence,datasetIndex=ds,selectedKeys=keys().slice();playPending=true;
+  $("play").disabled=true;$("play").textContent="Preparing sound…";
+  setMapLoading(true,"Preparing the sonification","Only the selected frame(s) are analysed");
+  try{
+    await ensureKeys(selectedKeys);
+    if(ticket!==playSequence||datasetIndex!==ds)return;
+    show(vk());SN.ensure(INTENS[+$('inten').value]);
+    const from=paused&&paused.sig===sig()?paused.i:0;paused=null;
+    info=SN.play(selectedKeys,data,16/SPEEDS[+$('speed').value],from);
+    playing=true;$("play").disabled=false;$("play").textContent="Ⅱ  Stop / pause";
+    say((from?"Resuming":"Playing")+facts(yi()));head.style.display="block";raf=requestAnimationFrame(vis);
+  }catch(error){
+    if(ticket===playSequence){say("Playback could not start: "+error.message);$("play").disabled=false;$("play").textContent="▶  Try again";}
+  }finally{
+    if(ticket===playSequence)playPending=false;
+  }
 }
-function vis(){
-  if(!playing)return;const i=Math.max(0,Math.floor(SN.clock()/info.dt));
-  if(i>=info.total){stop(true);clearPause();say("Finished");return}
-  const cmp=+$("mode").value===1,seg=Math.floor(i/info.L),s=Math.min(i%info.L,info.steps),k=keys()[seg];
-  head.style.left=(s/info.steps*100)+"%";head.style.top=cmp?seg*50+"%":"0";head.style.bottom=cmp?(1-seg)*50+"%":"0";
-  show(vk());draw(data[k],s,cmp?seg*576:0);raf=requestAnimationFrame(vis);
-}
-function draw(d,s,oy){ /* highlights on the picture: band glow at the scan bar, rings on bright hubs */
-  const G=SN.GEO;fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);const x=s*G.COLW+G.COLW/2;
-  for(let b=0;b<G.BANDS;b++){const a=d[(Math.min(s,G.STEPS-1)*G.BANDS+b)*2];if(!(a>0)||s>=G.STEPS)continue;
-    fx.fillStyle="rgba(242,193,78,"+(.15+.6*a)+")";const w=6+70*a;fx.fillRect(x-w,oy+G.BAND_TOP+b*G.BAND_H+4,2*w,G.BAND_H-8)}
-  for(const h of d.hubs){if(h.s>s)continue;const age=(s-h.s)*info.dt,hx=h.s*G.COLW+G.COLW/2,hy=oy+h.y;
-    if(age<1){fx.strokeStyle="rgba(255,236,170,"+(1-age)+")";fx.lineWidth=2;fx.beginPath();fx.arc(hx,hy,8+30*age,0,6.283);fx.stroke()}
-    fx.fillStyle="rgba(255,236,170,.6)";fx.beginPath();fx.arc(hx,hy,2.5,0,6.283);fx.fill()}
-}
-function stop(quiet){fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);if(playing&&info)paused={sig:sig(),i:Math.max(0,Math.floor(SN.clock()/info.dt))};const was=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();if(ready)$("play").textContent=paused?"Resume":"Play";if(was&&!quiet)say("Stopped")}
-const toggle=()=>playing?stop():play();
-const home=()=>{stop(true);clearPause();SN.ensure(INTENS[+$("inten").value]);SN.chime();$("ds").focus();say("Home. Choose a dataset.")};
-const setting=()=>say("Dataset "+SN.DATASETS[ds].name+", mode "+$("mode").selectedOptions[0].text+", "+(D().unit||"year").toLowerCase()+" "+ylab()+", speed "+SPEEDS[+$("speed").value]+"×, intensity "+INAMES[+$("inten").value]+(playing?", playing.":", stopped."));
 
-$("ds").onchange=()=>{stop(true);paused=null;ds=+$("ds").value;fillModes();labels();shown="";boot()};
-$("mode").onchange=()=>{stop(true);clearPause();shown="";labels();SN.ensure(INTENS[+$("inten").value]);SN.tick(+$("mode").value,3);if(ready)show(vk());say("Mode: "+$("mode").selectedOptions[0].text)};
-[["year",0],["speed",4],["inten",3]].forEach(([id,n])=>{
-  const el=$(id);
-  el.addEventListener("input",()=>{SN.ensure(INTENS[+$("inten").value]);labels();SN.tick(+el.value,id==="year"?Math.max(2,F().length):n);
-    if(id==="inten")SN.setIntensity(INTENS[+el.value]);else{stop(true);if(id==="year")clearPause();if(id==="year"&&ready){shown="";show(vk())}}
-    say(id==="year"?D().unit+" "+ylab()+facts(yi()):id==="speed"?"Speed "+SPEEDS[+el.value]+"×":"Intensity "+INAMES[+el.value])});
-  el.addEventListener("keydown",e=>{const v=+el.value;if((e.key==="ArrowLeft"||e.key==="ArrowDown")&&v===+el.min||(e.key==="ArrowRight"||e.key==="ArrowUp")&&v===+el.max){SN.ensure(INTENS[+$("inten").value]);SN.bump();say("Limit reached")}});
+function vis(){
+  if(!playing)return;
+
+  const index=Math.max(0,Math.floor(SN.clock()/info.dt));
+
+  if(index>=info.total){
+    stop(true);
+    clearPause();
+    say("Playback complete.");
+    return;
+  }
+
+  const compare=+$("mode").value===1;
+  const segment=Math.floor(index/info.L);
+  const step=Math.min(index%info.L,info.steps);
+  const key=keys()[segment];
+
+  if(compare){
+    head.style.left=(step/info.steps*100)+"%";
+    if(segment === 0) {
+      head.style.top="0%";
+      head.style.bottom="50%";
+    } else {
+      head.style.top="50%";
+      head.style.bottom="0%";
+    }
+  }else{
+    head.style.left=(step/info.steps*100)+"%";
+    head.style.top="0";
+    head.style.bottom="0";
+  }
+
+  show(vk());
+
+  draw(data[key],step,compare?segment*576:0);
+
+  raf=requestAnimationFrame(vis);
+}
+
+
+function draw(d,s,yOffset=0){
+  const G=SN.GEO;
+
+  fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);
+
+  const x=s*G.COLW+G.COLW/2;
+
+  for(let b=0;b<G.BANDS;b++){
+    const a=d[(Math.min(s,G.STEPS-1)*G.BANDS+b)*2];
+
+    if(!(a>0)||s>=G.STEPS)continue;
+
+    fx.fillStyle="rgba(182,255,0,"+(.15+.6*a)+")";
+
+    const w=6+70*a;
+
+    fx.fillRect(
+      x-w,
+      yOffset+G.BAND_TOP+b*G.BAND_H+4,
+      2*w,
+      G.BAND_H-8
+    );
+  }
+
+  for(const h of d.hubs){
+    if(h.s>s)continue;
+
+    const age=(s-h.s)*info.dt;
+    const hx=h.s*G.COLW+G.COLW/2;
+    const hy=yOffset+h.y;
+
+    if(age<1){
+      fx.strokeStyle="rgba(255,219,56,"+(1-age)+")";
+      fx.lineWidth=2;
+      fx.beginPath();
+      fx.arc(hx,hy,8+30*age,0,6.283);
+      fx.stroke();
+    }
+
+    fx.fillStyle="rgba(255,219,56,.8)";
+    fx.beginPath();
+    fx.arc(hx,hy,2.5,0,6.283);
+    fx.fill();
+  }
+}
+
+function stop(quiet){
+  playSequence++;playPending=false;
+  fx.clearRect(0,0,fx.canvas.width,fx.canvas.height);
+  if(playing&&info)paused={sig:sig(),i:Math.max(0,Math.floor(SN.clock()/info.dt))};
+  const wasPlaying=playing;playing=false;cancelAnimationFrame(raf);head.style.display="none";SN.stop();
+  if(ready){$("play").disabled=false;$("play").textContent=paused?"▶  Resume sonification":"▶  Play sonification";}
+  if(wasPlaying&&!quiet)say("Playback paused. Press Resume to continue from this position.");
+}
+const toggle=()=>playing?stop():play();
+const home=()=>{stop(true);clearPause();SN.ensure(INTENS[+$('inten').value]);SN.chime();$('ds').focus();say("Playback reset. Your selected dataset and date are unchanged.")};
+const setting=()=>say("Dataset: "+D().name+". Mode: "+$('mode').selectedOptions[0].text+". "+(D().unit||"Year")+": "+ylab()+". Speed: "+SPEEDS[+$('speed').value]+"×. Intensity: "+INAMES[+$('inten').value]+(playing?". Playing.":". Stopped."));
+async function refreshMap(){
+  const ticket=++refreshSequence,requested=keys().slice();
+  if(!F().length)return;
+  $("play").disabled=true;$("play").textContent="Loading frame…";
+  setMapLoading(true,"Switching data view","Fetching and analysing the selected frame");
+  try{
+    await ensureKeys(requested);
+    if(ticket!==refreshSequence)return;
+    show(vk());ready=true;$("play").disabled=false;$("play").textContent=paused?"▶  Resume sonification":"▶  Play sonification";
+    say("Ready."+facts(yi()));
+  }catch(error){
+    if(ticket!==refreshSequence)return;
+    $("play").disabled=true;$("play").textContent="Data could not load";
+    setMapLoading(true,"This frame could not be loaded",error.message);
+    say("Could not load the selected frame. Check the data file path.");
+  }
+}
+
+$("ds").onchange=()=>{
+  stop(true);clearPause();ds=+$('ds').value;useStore();fillModes();setDatasetCopy();labels();shown="";
+  refreshSequence++;boot();
+};
+$("mode").onchange=()=>{
+  stop(true);clearPause();shown="";labels();SN.ensure(INTENS[+$('inten').value]);SN.tick(+$('mode').value,3);refreshMap();
+};
+[["year",0],["speed",4],["inten",3]].forEach(([id,tickCount])=>{
+  const element=$(id);
+  element.addEventListener("input",()=>{
+    SN.ensure(INTENS[+$('inten').value]);labels();SN.tick(+element.value,id==="year"?Math.max(2,F().length):tickCount);
+    if(id==="inten"){SN.setIntensity(INTENS[+element.value]);say("Sound intensity: "+INAMES[+element.value]+".");}
+    else{
+      stop(true);
+      if(id==="year"){
+        clearPause();clearTimeout(refreshTimer);
+        refreshTimer=setTimeout(()=>{shown="";refreshMap()},100);
+        say(D().unit+" "+ylab()+" selected. Preparing this frame…");
+      }else say("Playback speed: "+SPEEDS[+element.value]+"×.");
+    }
+  });
+  element.addEventListener("keydown",event=>{
+    const value=+element.value;
+    if((event.key==="ArrowLeft"||event.key==="ArrowDown")&&value===+element.min||
+       (event.key==="ArrowRight"||event.key==="ArrowUp")&&value===+element.max){
+      SN.ensure(INTENS[+$('inten').value]);SN.bump();say("You have reached the end of this range.");
+    }
+  });
 });
-$("play").onclick=()=>{SN.ensure(INTENS[+$("inten").value]);toggle()};
+$("play").onclick=()=>toggle();
 $("home").onclick=home;
-addEventListener("keydown",e=>{
-  if(e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key,t=e.target.tagName;
-  if(k===" "&&t!=="BUTTON"&&t!=="SELECT"){e.preventDefault();SN.ensure(INTENS[+$("inten").value]);toggle()}
-  else if(k==="h"||k==="H"){home()}else if(k==="i"||k==="I"){setting()}
+addEventListener("keydown",event=>{
+  if(event.ctrlKey||event.metaKey||event.altKey)return;
+  const target=event.target,tag=target.tagName;
+  if(event.key===" "&&tag!=="BUTTON"&&tag!=="SELECT"&&tag!=="INPUT"&&tag!=="TEXTAREA"){
+    event.preventDefault();SN.ensure(INTENS[+$('inten').value]);toggle();
+  }else if((event.key==="h"||event.key==="H")&&tag!=="INPUT"&&tag!=="SELECT"){home();}
+  else if((event.key==="i"||event.key==="I")&&tag!=="INPUT"&&tag!=="SELECT"){setting();}
 });
-fillModes();labels();boot();
+
+fillModes();labels();setDatasetCopy();useStore();boot();
 </script>
 </body>
 </html>
